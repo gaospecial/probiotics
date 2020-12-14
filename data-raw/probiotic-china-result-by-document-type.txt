@@ -1,0 +1,14 @@
+﻿Document Types	records	% of 5004
+ARTICLE	4231	84.552
+REVIEW	569	11.371
+MEETING ABSTRACT	131	2.618
+EARLY ACCESS	80	1.599
+PROCEEDINGS PAPER	55	1.099
+LETTER	31	0.620
+EDITORIAL MATERIAL	10	0.200
+CORRECTION	9	0.180
+BOOK CHAPTER	2	0.040
+DATA PAPER	1	0.020
+REPRINT	1	0.020
+(0 Document Types value(s) outside display options.)
+(0 records (0.000%) do not contain data in the field being analyzed.)
