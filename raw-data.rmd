@@ -99,4 +99,66 @@ saveRDS(china_study, file = "data/china_study.RDS")
 ## 物种信息的处理
 
 常见的益生菌是各种乳酸菌，在微生物分类学上通常来源于两个属（genus）：
+*Bifidobacterium* 和 *Lactobacillus*。但是，并非全部的益生菌都来源于这两个属。
 
+为了尽可能的确定每一篇文献中描述的益生菌来源，我们需要构建一个微生物属名数据库。
+经过调研，最终决定依托 'The All-Species Living Tree' Project （LTP）来完成。
+
+LTP 维护了现有已知的所有物种名称，因此我们可以从中提取出属名，
+在此基础上根据属名的检索结果确定每一个益生菌研究中所用的益生菌的类型。
+
+```{r}
+library(ggtree)
+library(treeio)
+
+read.newick <- function(file, node.label = "label", ...) {
+    node.label <- match.arg(node.label, c("support", "label"))
+    tree_data <- scan(file = file, what = "", sep = "\n", quiet = TRUE, encoding = "UTF-8", ...)
+    tree_data <- gsub(" ",",",tree_data)
+    tree_data <- paste0(tree_data, collapse = "")
+    tree <- read.tree(text = tree_data)
+    if (node.label == "label")
+        return(tree)
+
+    df <- tibble(node = nodeIds(tree),
+                     support = as.numeric(tree$node.label))
+
+    tree$node.label <- NULL
+    new("treedata",
+        phylo = tree,
+        data = df)
+}
+
+ltp <- read.newick(file = "data-raw/LTPs132_SSU_tree.newick")
+```
+
+
+```{r eval=FALSE, include=FALSE}
+p <- ggtree(ltp, layout = "circular") 
+ggsave("figure/ltp-tree.png", plot = p, scale = 2)
+```
+
+图 \@ref(fig:ltp-tree) 可以一瞥所有这些物种。不过我们关心的是属名。
+
+```{r ltp-tree, fig.cap="全部物种的进化树"}
+knitr::include_graphics("figure/ltp-tree.png")
+```
+
+所以，我们从 `tip.label` 中提取物种的信息，并保存到 `organism.Rds` 中。
+
+```{r}
+library(tidyr)
+organism <- tibble(ltp = ltp$tip.label) %>%
+  separate(col = ltp, 
+           into = c("accession","genus_species","family","extra"),
+           sep = "_,") %>%
+  separate(col = genus_species,
+           into = c("genus","species"),
+           sep = ",",
+           extra = "drop")  # extra is subsp. info
+saveRDS(organism, file = "data/organism.Rds")
+```
+
+这些物种共有 `r nrow(organism)` 个，
+来自于 `r length(unique(organism$genus))` 个不同的属，
+`r length(unique(organism$family))` 个不同的科。
