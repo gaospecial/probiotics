@@ -1,4 +1,4 @@
-﻿Document Types	records	% of 37839
+Document Types	records	% of 37839
 ARTICLE	27731	73.287
 REVIEW	5523	14.596
 MEETING ABSTRACT	2697	7.128

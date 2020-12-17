@@ -1,4 +1,4 @@
-﻿Publication Years	records	% of 37839
+Publication Years	records	% of 37839
 2020	4274	11.295
 2019	4261	11.261
 2018	3421	9.041

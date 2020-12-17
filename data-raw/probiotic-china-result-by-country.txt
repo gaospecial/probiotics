@@ -1,4 +1,4 @@
-﻿Countries/Regions	records	% of 5004
+Countries/Regions	records	% of 5004
 PEOPLES R CHINA	4448	88.889
 TAIWAN	577	11.531
 USA	450	8.993

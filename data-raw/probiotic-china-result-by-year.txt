@@ -1,4 +1,4 @@
-﻿Publication Years	records	% of 5004
+Publication Years	records	% of 5004
 2020	1038	20.743
 2019	972	19.424
 2018	606	12.110

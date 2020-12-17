@@ -1,4 +1,4 @@
-﻿Web of Science Categories	records	% of 5004
+Web of Science Categories	records	% of 5004
 FOOD SCIENCE TECHNOLOGY	1018	20.344
 MICROBIOLOGY	824	16.467
 BIOTECHNOLOGY APPLIED MICROBIOLOGY	633	12.650

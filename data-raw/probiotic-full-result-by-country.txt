@@ -1,4 +1,4 @@
-﻿Countries/Regions	records	% of 37839
+Countries/Regions	records	% of 37839
 USA	6190	16.359
 PEOPLES R CHINA	4444	11.744
 ITALY	2738	7.236

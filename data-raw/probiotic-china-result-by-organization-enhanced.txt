@@ -1,4 +1,4 @@
-﻿Organizations-Enhanced	records	% of 5004
+Organizations-Enhanced	records	% of 5004
 JIANGNAN UNIVERSITY	238	4.756
 CHINESE ACADEMY OF SCIENCES	219	4.376
 ZHEJIANG UNIVERSITY	214	4.277
