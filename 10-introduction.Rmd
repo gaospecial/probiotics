@@ -4,8 +4,8 @@
 
 
 
-```{r global-growth-by-year, fig.cap="全球益生菌研究的增长情况"}
-opts_current$get("label")
+```{r global-growth-by-year, fig.cap=caption_download("全球益生菌研究的增长情况")}
+lab <- opts_current$get("label")
 global_growth <- read_wos_tsv("data-raw/probiotic-full-result-by-year.txt")
 p <- ggplot(global_growth$data,aes(Group,Record,alpha=I(1/2))) +
   geom_point(shape = 21, size =3) +
@@ -15,6 +15,7 @@ p <- ggplot(global_growth$data,aes(Group,Record,alpha=I(1/2))) +
   labs(title = global_growth$field,
        x = "")
 plot.ly(p,tooltip = c("x","y"))
+graph2ppt(p, file = fig_path(".pptx"))
 ```
 
 

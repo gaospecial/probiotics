@@ -7,3 +7,8 @@ read_wos_tsv <- function(file){
 }
 
 plot.ly <- mrgut::plot.ly
+
+caption_download <- function(...){
+  x <- paste0(...," [ppt](", fig_path(".pptx"),")")
+  return(x)
+}
