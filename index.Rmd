@@ -21,11 +21,32 @@ options(
   htmltools.dir.version = FALSE, formatR.indent = 2, width = 55, digits = 4
 )
 
+knitr::opts_chunk$set(include = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
+
 # 填上你需要用到的包，如 c('ggplot2', 'dplyr')
-lapply(c(), function(pkg) {
+lapply(c("dplyr","ggplot2","tidyr","visNetwork","plotly",
+         "bibliometrix","ggVennDiagram",
+         "mrgut"), function(pkg) {
   if (system.file(package = pkg) == '') install.packages(pkg)
 })
+
+
+
+
+library(ggplot2)
+library(dplyr)
+library(export)
+library(plotly)
+library(bibliometrix)
+library(RColorBrewer)
+library(visNetwork)
+library(knitr)
+
+theme_set(theme_bw())
 ```
+
 
 # 前言 {-}
 
