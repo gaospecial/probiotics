@@ -37,6 +37,7 @@ lapply(c("dplyr","ggplot2","tidyr","visNetwork","plotly",
 
 
 library(ggplot2)
+library(forcats)
 library(dplyr)
 library(export)
 library(plotly)
@@ -44,6 +45,8 @@ library(bibliometrix)
 library(RColorBrewer)
 library(visNetwork)
 library(knitr)
+library(mrgut)
+library(tibble)
 
 theme_set(theme_bw())
 source("./function.R")
