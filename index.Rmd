@@ -45,7 +45,6 @@ library(bibliometrix)
 library(RColorBrewer)
 library(visNetwork)
 library(knitr)
-library(mrgut)
 library(tibble)
 
 theme_set(theme_bw())
