@@ -1,27 +1,162 @@
-# 概述 {intro}
+# 全球的益生菌研究概览 {#intro}
 
-## 益生菌相关研究在近十年呈现爆炸性增长局面
+## 益生菌相关研究现正处于爆炸式增长阶段
 
-
+> 数量，最能展示研究的火爆程度。本章所用的数据集中，从 1990 年以前便有益生菌相关研究，
+但是一直不愠不火，而到了 2000 年前后，事情开始起了一些变化。
 
 ```{r global-growth-by-year, fig.cap=caption_download("全球益生菌研究的增长情况")}
-lab <- opts_current$get("label")
-global_growth <- read_wos_tsv("data-raw/probiotic-full-result-by-year.txt")
+global_growth <- read_wos_tsv("data-raw/probiotic-full-result-by-year.txt") 
 p <- ggplot(global_growth$data,aes(Group,Record,alpha=I(1/2))) +
-  geom_point(shape = 21, size =3) +
+  geom_point(shape = 21, size =3,fill="blue4") +
   geom_area(fill = "blue") +
   geom_line(size = 2, color = "blue4") +
   coord_cartesian(xlim = c(1990,2020)) +
   labs(title = global_growth$field,
        x = "")
 plot.ly(p,tooltip = c("x","y"))
-graph2ppt(p, file = fig_path(".pptx"))
+graph2pptx(p)
+```
+
+图 \@ref(fig:global-growth-by-year) 展示了全球益生菌研究论文发表数量的增长情况。
+可以看出，进入二十一世纪前后，益生菌的研究成果呈现出突飞猛进的形势，
+每年的论文发表数目持续攀高。
+
+## 中国也有非常多的益生菌研究成果
+
+> 现在的市面上，益生菌产品大家都喜欢舶来品，但是相关研究中国可真不差。
+或许假以时日，中国制造的益生菌产品也可以像其它中国制造一样畅销全球。
+
+```{r global-output-by-country, fig.cap=caption_download("益生菌研究成果最突出的国家")}
+global_country <- read_wos_tsv("data-raw/probiotic-full-result-by-country.txt")
+# Taiwan is part of China
+country_data <- global_country$data %>%
+  mutate(Group = ifelse(is.part_of_china(Group),"China",Group)) %>%
+  group_by(Group) %>%
+  summarise(Record = sum(Record)) %>%
+  ungroup() %>%
+  arrange(desc(Record))
+hbarplot(country_data, n = 10) +
+  labs(x="", y="Record",title = global_country$field) +
+  scale_y_continuous(expand = expansion(mult = c(0,.02)))
+graph2pptx()
+```
+
+图 \@ref(fig:global-output-by-country) 展示了全部论文的来源国。
+由图可知，美国、中国、意大利等国科学家对相关研究的贡献最为突出。
+其中，中国的益生菌研究论文总量已经非常接近美国，约相当于后者的八成。
+
+## 益生菌研究在多个学科中涉及且在多个领域中应用
+
+> 你以为益生菌只能用来调理肠胃？应该说远不止于此，它的研究和应用领域实际上非常广泛。
+
+```{r global-category, fig.cap=caption_download("益生菌研究横跨生物、食品、农业等多个学科")}
+global_category <- read_wos_tsv("data-raw/probiotic-full-result-by-category.txt")
+library(treemap)
+tree_data <- global_category$data %>%
+  head(15)
+treemap(tree_data, index = "Group", vSize = "Record", title = global_category$field)
+graph2pptx()
+```
+图 \@ref(fig:global-category) 展示了益生菌研究涉及的广泛研究领域。
+实际上，相关研究至少涉及几十个大的或小的学科领域，
+此处仅展示了最常见的十几个，这其中包括了微生物学、食品科学与技术、
+应用微生物学生物技术等多个门类。
+值得一提的是，益生菌研究不仅涉及到肠病/肝病学、儿科学等与人健康息息相关的领域，
+还在畜牧、兽医、渔业等领域中有非常多的研究，预示着益生菌在农业生产中的重要应用价值。
+
+## 研究类型
+
+> 有人研究就有人总结，你觉得综述文章所占的比例可以反映观点的多样化程度吗？
+
+```{r global-document-type, fig.cap=caption_download("研究类型")}
+global_document_type <- read_wos_tsv("data-raw/probiotic-full-result-by-document-type.txt")
+type <- global_document_type$data %>%
+  mutate(Group = simplify_document_type(Group)) %>%
+  group_by(Group) %>%
+  summarise(Record = sum(Record)) %>%
+  ungroup() %>%
+  arrange(desc(Record))
+ggplot(type,
+       aes(x="",y=Record, fill=Group)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar("y",start = 0) +
+  geom_text(aes(label = Group), 
+            position = position_stack(0.5), 
+            color = "white",
+            fontface = "bold") +
+  theme_void() +
+  theme(legend.position = "none") +
+  scale_fill_brewer(palette = "Accent")
+graph2pptx()
+```
+
+图 \@ref(fig:global-document-type) 展示了论文的类型。
+这其中以研究论文最多，占近四分之三的比例，综述论文占剩下的一半左右。
+
+## 期刊
+
+> 如果你是现在正在开展益生菌相关研究的研究生，你会把自己的论文发表在那本杂志上呢？
+
+```{r global-source, fig.cap=caption_download("发文最多的期刊"), fig.asp=1}
+global_source <- read_wos_tsv("data-raw/probiotic-full-result-by-journal.txt")
+hbarplot(global_source$data[,1:2]) +
+  labs(x="",y="Record",title = global_source$field)
+graph2pptx()
+```
+图 \@ref(fig:global-source) 展示了发文量最高的几大期刊。
+除了 PLoS One 和 Frontiers in Microbiology 等在线开放获取期刊之外，
+像 LWT Food Science and Technology，Beneficial Microbes 等期刊发文量也相当大。
+
+## 知名研究机构
+
+> 一个老牌的知名机构，不仅站在研究的前沿，还可能是当前如火如荼益生菌新产业的发源地。
+
+
+```{r global-organization, fig.cap=caption_download("全球最知名的研究机构"), fig.asp=1}
+global_organization <- read_wos_tsv("data-raw/probiotic-full-result-by-organization-enhanced.txt")
+organization <- global_organization$data
+hbarplot(organization[,1:2]) +
+  labs(x="",y="Record",title = global_source$field)
+graph2pptx()
+```
+
+图 \@ref(fig:global-organization) 列出了全球范围内按照论文发表数量统计的最突出的研究机构。
+排名前三的分别是：西班牙高等科学研究理事会，爱尔兰科克大学和法国农业科学院。
+这其中仅有一家来自于中国，那就是江南大学，排在第 24 位。
+
+```{r eval=FALSE}
+country <- lapply(organization$Group, function(address){
+  tryCatch(geocode_country(geocode(address, service = "google")),
+           error = function(x) NULL)
+})
+country <- unlist(country)
+saveRDS(country, "data/top_organization_country_by_google.Rds")
 ```
 
 
 
-## 顶尖机构广泛参与
-
-
-## 益生菌研究的重大发现
+```{r global-organization-country, fig.cap=caption_download("最顶尖机构的地理位置")}
+data("GNI2014")
+country <- readRDS("data/top_organization_country_by_google.Rds") %>%
+  as_tibble_col(column_name = "country") %>%
+  left_join(GNI2014)
+continent <- country %>%
+  group_by(continent) %>%
+  summarise(count = n()) %>%
+  ungroup() %>%
+  filter(count != 0)
+ggplot(continent, aes(x="",y=count,fill=continent,label=continent)) +
+  geom_col(width = 1,color="white") +
+  coord_polar("y",start = 0) +
+  ggrepel::geom_text_repel(position = position_stack(0.5), 
+            color = "white",
+            fontface = "bold") +
+  theme_void() +
+  theme(legend.position = "none") +
+  scale_fill_brewer(palette = "Set1")
+graph2pptx()
+```
+图 \@ref(fig:global-organization-country) 展示了这些知名机构的地理位置，
+其中欧洲最多，美洲次之，而亚洲最少。
 
