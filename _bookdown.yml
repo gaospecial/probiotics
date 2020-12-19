@@ -8,8 +8,3 @@ language:
   ui:
     edit: "编辑"
     chapter_name: ["第 ", " 章"]
-rmd_files: ["index.Rmd",
-            "00-author.Rmd",
-            "05-raw-data.Rmd",
-            "10-introduction.Rmd",
-            "99-references.Rmd"]

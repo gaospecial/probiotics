@@ -56,13 +56,17 @@ source("./function.R")
 
 # 前言 {-}
 
-你好，世界。我写了一本书。这本书是这样的，第 \@ref(intro) 章介绍了啥啥，第 \@ref(wind) 章说了啥啥，然后是啥啥……
+你好，世界。为了全方位的展示益生菌相关研究的历史和现状，我写了本书。
+这本书是这样的，第 \@ref(intro) 章介绍了全球范围内相关研究的概括，
+第 \@ref(china-study) 章则介绍了中国本土益生菌研究的概括，
+第 \@ref(highly-cited) 章则基于高被引论文，剖析了益生菌研究的热点，
+第 \@ref(china-detailed) 章则更完整的展示了中国本土益生菌研究的各个方面。
 
-我用了两个 R 包编译这本书，分别是 **knitr**\index{knitr} [@xie2015] 和 **bookdown**\index{bookdown} [@R-bookdown]。以下是我的 R 进程信息：
+本书采用的方法是文献计量学方法，目前采用了 Web of Science （WoS）数据库[^wos]的数据源。
+关于数据源的一些信息，可以参见第 \@ref(raw-data) 章。
 
-```{r}
-sessionInfo()
-```
+[^wos]: WoS 即通常说的 SCI 数据库。该数据库是目前世界范围内最权威的科技文献数据库，
+但是目前其仅仅收录了外文文献。
 
 ## 致谢 {-}
 
