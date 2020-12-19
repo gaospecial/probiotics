@@ -46,7 +46,9 @@ library(RColorBrewer)
 library(visNetwork)
 library(knitr)
 library(tibble)
-
+library(ggraph)
+library(tidygraph)
+library(treemap)
 theme_set(theme_bw())
 source("./function.R")
 ```

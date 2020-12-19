@@ -52,7 +52,6 @@ graph2pptx()
 
 ```{r global-category, fig.cap=caption_download("益生菌研究横跨生物、食品、农业等多个学科")}
 global_category <- read_wos_tsv("data-raw/probiotic-full-result-by-category.txt")
-library(treemap)
 tree_data <- global_category$data %>%
   head(15)
 treemap(tree_data, index = "Group", vSize = "Record", title = global_category$field)

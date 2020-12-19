@@ -22,8 +22,11 @@ hbarplot <- function(d, n=NULL){
   if (ncol(d) != 2) stop("data must have only two columns.")
   if(is.numeric(n)) d <- head(d,n)
   colnames(d) <- c("name","value")
+  d <- d %>%
+    mutate(no=row_number()) %>%
+    mutate(no=factor(no, levels = rev(no)))
   v <- max(d$value)/2
-  ggplot(d, aes(fct_rev(as_factor(name)), value)) + geom_col() +
+  ggplot(d, aes(no, value)) + geom_col() +
     scale_y_continuous(expand = expansion(mult = c(0,.02)))+
     geom_text(aes(label = name, y = value - 1), size = 3,
               vjust = 0.3, hjust = 1, data = function(d) d[d$value > v, ], color = "white", fontface = "bold") +
@@ -31,7 +34,8 @@ hbarplot <- function(d, n=NULL){
               vjust = 0.5, hjust = 0, data = function(d) d[d$value <= v, ]) +
     coord_flip() +
     theme_light() +
-    theme(axis.text.y = element_blank())
+    theme(axis.text.y = element_text(face = "bold",
+                                     margin = margin(t=1,r=0,b=0,l=0,unit = "pt")))
 }
 
 is.part_of_china <- function (x) {
@@ -94,11 +98,11 @@ geocode_country <- function(obj){
   # for Google geocode result
   if (inherits(obj, "googleGeocode")){
     components <- obj$results[[1]]$address_components
-    is_country <- lapply(components, function(x){
+    found <- lapply(components, function(x){
       types <- x$types
       any(types %in% "country")
     })
-    id <- which(unlist(is_country)==TRUE)
+    id <- which(unlist(found)==TRUE)
     if (length(id)<1) return(NA)
     return(components[[id]]$long_name)
   }
@@ -108,3 +112,23 @@ geocode_country <- function(obj){
     return(obj$resourceSets[[1]]$resources[[1]]$address$countryRegion)
   }
 }
+
+geocode_province <- function(obj){
+  # for Google geocode result
+  if (inherits(obj, "googleGeocode")){
+    components <- obj$results[[1]]$address_components
+    found <- lapply(components, function(x){
+      types <- x$types
+      any(types %in% "administrative_area_level_1")
+    })
+    id <- which(unlist(found)==TRUE)
+    if (length(id)<1) return(NA)
+    return(components[[id]]$long_name)
+  }
+  
+  # for Bing Geocode result
+  if (inherits(obj, "bingGeocode")){
+    return(obj$resourceSets[[1]]$resources[[1]]$address$adminDistrict)
+  }
+}
+
