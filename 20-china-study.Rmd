@@ -1,0 +1,161 @@
+# 中国的益生菌研究概览 {#china-study}
+
+## 二十年前，中国还没有益生菌研究？
+
+> 其实并非没有益生菌研究，而是 2000 年以后再 SCI 期刊发表论文才逐渐成为潮流。
+因为本次没有涉及中文期刊论文数据，所以仅能管中窥豹了。
+
+```{r china-growth-by-year, fig.cap=caption_download("益生菌研究论文的数目增长情况")}
+china_growth <- read_wos_tsv("data-raw/probiotic-china-result-by-year.txt") 
+p <- ggplot(china_growth$data,aes(Group,Record,alpha=I(1/2))) +
+  geom_point(shape = 21, size =3,fill="blue4") +
+  geom_area(fill = "blue") +
+  geom_line(size = 2, color = "blue4") +
+  coord_cartesian(xlim = c(1990,2020)) +
+  labs(title = china_growth$field,
+       x = "")
+plot.ly(p,tooltip = c("x","y"))
+graph2pptx(p)
+```
+
+图 \@ref(fig:china-growth-by-year) 展示了中国益生菌研究论文发表数量的增长情况。
+可以看出，近几年益生菌的研究成果数目增长非常迅速。
+
+## 中国与世界合作开展益生菌研究
+
+> 合作研究
+
+```{r china-output-by-country, fig.cap=caption_download("与中国开展合作研究的国家")}
+china_country <- read_wos_tsv("data-raw/probiotic-china-result-by-country.txt")
+
+# Taiwan is part of China
+country_data <- china_country$data %>%
+  mutate(Group = ifelse(is.part_of_china(Group),"China",Group)) %>%
+  group_by(Group) %>%
+  summarise(Record = sum(Record)) %>%
+  ungroup() %>%
+  arrange(desc(Record))
+# graph_data <- data.frame(from="China",
+#                          to = country_data$Group,
+#                          n = country_data$Record,
+#                          value = country_data$Group)
+# g <- as_tbl_graph(graph_data)
+# visIgraph(g) %>% visIgraphLayout(physics = T)
+
+treemap(country_data[-1,],
+        index = "Group", 
+        vSize = "Record", 
+        title = "China collaborators")
+graph2pptx()
+```
+```{r}
+percentage <- (sum(country_data$Record) - country_data$Record[[1]]) / country_data$Record[[1]] * 100
+```
+
+
+图 \@ref(fig:china-output-by-country) 展示了全部论文除中国之外的来源国。
+由图可知，美国、加拿大、澳大利亚等国科学家与中国的关联更加密切。
+有 `r percentage`% 的论文是与国际合作发表的。
+
+## 益生菌研究在多个学科中涉及且在多个领域中应用
+
+> 你以为益生菌只能用来调理肠胃？应该说远不止于此，它的研究和应用领域实际上非常广泛。
+
+```{r china-category, fig.cap=caption_download("益生菌研究横跨生物、食品、农业等多个学科")}
+china_category <- read_wos_tsv("data-raw/probiotic-china-result-by-category.txt")
+tree_data <- china_category$data %>%
+  head(15)
+treemap(tree_data, index = "Group", vSize = "Record", title = china_category$field)
+graph2pptx()
+```
+图 \@ref(fig:china-category) 展示了益生菌研究涉及的广泛研究领域。
+这些领域虽然与全球十分雷同（图 \@ref(fig:global-category)），但是各领域的排列有显著不同。
+例如，食品科学与技术排在了微生物学前面，
+儿科学也并没有出现在这里（此处仅展示前 15 个）。
+实际上，相关研究至少涉及几十个大的或小的学科领域，
+
+
+## 研究类型
+
+> 有人研究就有人总结，你觉得综述文章所占的比例可以反映观点的多样化程度吗？
+
+```{r china-document-type, fig.cap=caption_download("研究类型")}
+china_document_type <- read_wos_tsv("data-raw/probiotic-china-result-by-document-type.txt")
+type <- china_document_type$data %>%
+  mutate(Group = simplify_document_type(Group)) %>%
+  group_by(Group) %>%
+  summarise(Record = sum(Record)) %>%
+  ungroup() %>%
+  arrange(desc(Record))
+ggplot(type,
+       aes(x="",y=Record, fill=Group)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar("y",start = 0) +
+  geom_text(aes(label = Group), 
+            position = position_stack(0.5), 
+            color = "white",
+            fontface = "bold") +
+  theme_void() +
+  theme(legend.position = "none") +
+  scale_fill_brewer(palette = "Accent")
+graph2pptx()
+```
+
+图 \@ref(fig:china-document-type) 展示了论文的类型。
+这其中以研究论文所占比例非常大，远超四分之三的比例，
+这一点与全球的特点不尽相同（图 \@ref(fig:global-document-type)）。
+
+## 期刊
+
+> 如果你是现在正在开展益生菌相关研究的研究生，你会把自己的论文发表在那本杂志上呢？
+
+```{r china-source, fig.cap=caption_download("中国学者发文最多的期刊"), fig.asp=1}
+china_source <- read_wos_tsv("data-raw/probiotic-china-result-by-journal.txt")
+hbarplot(china_source$data[,1:2]) +
+  labs(x="",y="Record",title = china_source$field)
+graph2pptx()
+```
+图 \@ref(fig:china-source) 展示了发文量最高的几大期刊。
+
+## 知名研究机构
+
+> 一个老牌的知名机构，不仅站在研究的前沿，还可能是当前如火如荼益生菌新产业的发源地。
+
+
+```{r china-organization, fig.cap=caption_download("中国最知名的研究机构"), fig.asp=1}
+china_organization <- read_wos_tsv("data-raw/probiotic-china-result-by-organization-enhanced.txt")
+organization <- china_organization$data
+hbarplot(organization[,1:2]) +
+  labs(x="",y="Record",title = china_source$field)
+graph2pptx()
+```
+
+图 \@ref(fig:china-organization) 列出了国内按照论文发表数量统计的最突出的研究机构。
+
+
+```{r eval=FALSE}
+province <- lapply(organization$Group, function(address){
+  tryCatch(geocode_province(geocode(address, service = "google")),
+           error = function(x) NULL)
+})
+province <- unlist(province)
+saveRDS(province, "data/chinese_top_organization_province_by_google.Rds")
+```
+
+
+
+```{r china-organization-country, fig.cap=caption_download("最顶尖机构的地理位置")}
+province <- readRDS("data/chinese_top_organization_province_by_google.Rds") %>%
+  str_remove(" (Sheng|Shi|Zizhiqu|City|Island)") %>%
+  str_replace(pattern = "Taichung|Taipei", replacement = "Taiwan") %>%
+  str_replace("Iowa","Beijing") %>% # manual correction
+  table() %>%
+  sort
+pie(province, init.angle = 100,col = rainbow(length(province)))
+graph2pptx()
+```
+图 \@ref(fig:china-organization-country) 展示了这些知名机构的地理位置，
+其中北京市最多，台湾省紧随其后，四川和江苏省紧随其后。
+从这里我们在看到中国个别省份相关研究十分火爆的情况下，
+可能还需要在产业转化上做更多文章。
+
