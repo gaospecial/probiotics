@@ -3,6 +3,10 @@ p.caption {
   margin-top: 10px;
   text-align: center;
 }
+.figure {
+  margin: auto;
+  text-align: center;
+}
 p code {
   white-space: inherit;
 }

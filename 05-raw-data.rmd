@@ -1,4 +1,10 @@
-# 原始数据处理 {raw-data}
+# 原始数据处理 {#raw-data}
+
+```{r}
+echo <- knitr::opts_chunk$get("echo")
+if (!isTRUE(echo)) knitr::opts_chunk$set(echo = TRUE)
+```
+
 
 ## 文献数据的预处理
 
@@ -162,3 +168,7 @@ saveRDS(organism, file = "data/organism.Rds")
 这些物种共有 `r nrow(organism)` 个，
 来自于 `r length(unique(organism$genus))` 个不同的属，
 `r length(unique(organism$family))` 个不同的科。
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = echo)
+```
