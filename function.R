@@ -132,3 +132,4 @@ geocode_province <- function(obj){
   }
 }
 
+geocode_state <- geocode_province

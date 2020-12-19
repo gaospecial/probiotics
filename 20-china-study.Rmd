@@ -144,7 +144,7 @@ saveRDS(province, "data/chinese_top_organization_province_by_google.Rds")
 
 
 
-```{r china-organization-country, fig.cap=caption_download("最顶尖机构的地理位置")}
+```{r china-organization-location, fig.cap=caption_download("最顶尖机构的地理位置")}
 province <- readRDS("data/chinese_top_organization_province_by_google.Rds") %>%
   str_remove(" (Sheng|Shi|Zizhiqu|City|Island)") %>%
   str_replace(pattern = "Taichung|Taipei", replacement = "Taiwan") %>%
