@@ -13,7 +13,7 @@ fig:china-category
 fig:china-document-type
 fig:china-source
 fig:china-organization
-fig:china-organization-country
+fig:china-organization-location
 raw-data
 文献数据的预处理
 物种信息的处理
