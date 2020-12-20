@@ -7,15 +7,14 @@
 
 ```{r global-growth-by-year, fig.cap=caption_download("全球益生菌研究的增长情况")}
 global_growth <- read_wos_tsv("data-raw/probiotic-full-result-by-year.txt") 
-p <- ggplot(global_growth$data,aes(Group,Record,alpha=I(1/2))) +
+ggplot(global_growth$data,aes(Group,Record,alpha=I(1/2))) +
   geom_point(shape = 21, size =3,fill="blue4") +
   geom_area(fill = "blue") +
   geom_line(size = 2, color = "blue4") +
   coord_cartesian(xlim = c(1990,2020)) +
   labs(title = global_growth$field,
        x = "")
-plot.ly(p,tooltip = c("x","y"))
-graph2pptx(p)
+graph2pptx()
 ```
 
 图 \@ref(fig:global-growth-by-year) 展示了全球益生菌研究论文发表数量的增长情况。

@@ -7,15 +7,14 @@
 
 ```{r china-growth-by-year, fig.cap=caption_download("益生菌研究论文的数目增长情况")}
 china_growth <- read_wos_tsv("data-raw/probiotic-china-result-by-year.txt") 
-p <- ggplot(china_growth$data,aes(Group,Record,alpha=I(1/2))) +
+ggplot(china_growth$data,aes(Group,Record,alpha=I(1/2))) +
   geom_point(shape = 21, size =3,fill="blue4") +
   geom_area(fill = "blue") +
   geom_line(size = 2, color = "blue4") +
   coord_cartesian(xlim = c(1990,2020)) +
   labs(title = china_growth$field,
        x = "")
-plot.ly(p,tooltip = c("x","y"))
-graph2pptx(p)
+graph2pptx()
 ```
 
 图 \@ref(fig:china-growth-by-year) 展示了中国益生菌研究论文发表数量的增长情况。
@@ -154,7 +153,7 @@ province <- readRDS("data/chinese_top_organization_province_by_google.Rds") %>%
 pie(province, init.angle = 100,col = rainbow(length(province)))
 graph2pptx()
 ```
-图 \@ref(fig:china-organization-country) 展示了这些知名机构的地理位置，
+图 \@ref(fig:china-organization-location) 展示了这些知名机构的地理位置，
 其中北京市最多，台湾省紧随其后，四川和江苏省紧随其后。
 从这里我们在看到中国个别省份相关研究十分火爆的情况下，
 可能还需要在产业转化上做更多文章。

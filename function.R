@@ -46,7 +46,8 @@ is.part_of_china <- function (x) {
 }
 
 caption_download <- function(...){
-  x <- paste0(...," [ppt](", fig_path(".pptx"),")")
+  x <- paste0(...," [ppt](", fig_path(".pptx"),"),")
+  x <- paste0(x, " [pdf](", fig_path(".pdf"),")")
   return(x)
 }
 
