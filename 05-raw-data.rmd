@@ -92,6 +92,15 @@ highly_cited <- uniq_tag(highly_cited)
 china_study <- uniq_tag(china_study)
 ```
 
+整合作者单位信息。
+
+
+```{r}
+highly_cited <- uniq_tag(highly_cited, Field = "AU_UN")
+china_study <- uniq_tag(china_study, Field = "AU_UN")
+
+```
+
 综上所述，文献数据的预处理包括对 WoS 数据的规范和添加一些辅助信息，
 以便为后续的分析打好基础。
 预处理后的数据保存下来，供后续使用时调用。
@@ -108,7 +117,7 @@ saveRDS(china_study, file = "data/china_study.RDS")
 *Bifidobacterium* 和 *Lactobacillus*。但是，并非全部的益生菌都来源于这两个属。
 
 为了尽可能的确定每一篇文献中描述的益生菌来源，我们需要构建一个微生物属名数据库。
-经过调研，最终决定依托 'The All-Species Living Tree' Project （LTP）来完成。
+经过调研，最终决定依托 ['The All-Species Living Tree' Project （LTP）](https://www.arb-silva.de/projects/living-tree/)来完成。
 
 LTP 维护了现有已知的所有物种名称，因此我们可以从中提取出属名，
 在此基础上根据属名的检索结果确定每一个益生菌研究中所用的益生菌的类型。
@@ -117,25 +126,20 @@ LTP 维护了现有已知的所有物种名称，因此我们可以从中提取�
 library(ggtree)
 library(treeio)
 
-read.newick <- function(file, node.label = "label", ...) {
-    node.label <- match.arg(node.label, c("support", "label"))
-    tree_data <- scan(file = file, what = "", sep = "\n", quiet = TRUE, encoding = "UTF-8", ...)
-    tree_data <- gsub(" ",",",tree_data)
-    tree_data <- paste0(tree_data, collapse = "")
-    tree <- read.tree(text = tree_data)
-    if (node.label == "label")
-        return(tree)
+# there is a bug in read.tree, see https://github.com/YuLab-SMU/treeio/pull/41
+# 'The All-Species Living Tree' Project 
+file_SSU = "data-raw/LTPs132_SSU_tree.newick"
+tree_data <- scan(file = file_SSU, 
+                  what = "", 
+                  sep = "\n", 
+                  quiet = TRUE, 
+                  encoding = "UTF-8")
+tree_data <- gsub(" ","_",tree_data)
+tree_data <- paste0(tree_data, collapse = "")
+ltp_SSU <- read.tree(text = tree_data)
 
-    df <- tibble(node = nodeIds(tree),
-                     support = as.numeric(tree$node.label))
-
-    tree$node.label <- NULL
-    new("treedata",
-        phylo = tree,
-        data = df)
-}
-
-ltp <- read.newick(file = "data-raw/LTPs132_SSU_tree.newick")
+SSU_file <- "data-raw/LTPs123_LSU_tree.newick"
+ltp_LSU <- read.tree(file = SSU_file, skip =  11)
 ```
 
 
@@ -154,14 +158,26 @@ knitr::include_graphics("figure/ltp-tree.png")
 
 ```{r}
 library(tidyr)
-organism <- tibble(ltp = ltp$tip.label) %>%
+
+prokaryotic_organism <- tibble(ltp = ltp_SSU$tip.label) %>%
   separate(col = ltp, 
-           into = c("accession","genus_species","family","extra"),
-           sep = "_,") %>%
+           into = c("accession","genus_species","family"),
+           sep = "__",
+           extra = "drop") %>%
   separate(col = genus_species,
            into = c("genus","species"),
-           sep = ",",
+           sep = "_",
            extra = "drop")  # extra is subsp. info
+eukaryotic_organism <- tibble(ltp = ltp_LSU$tip.label) %>%
+  separate(col = ltp, 
+           into = c("genus_species","accession","family"),
+           sep = "__",
+           extra = "drop") %>%
+  separate(col = genus_species,
+           into = c("genus","species"),
+           sep = "_",
+           extra = "drop")  # extra is subsp. info
+organism <- rbind(prokaryotic_organism, eukaryotic_organism)
 saveRDS(organism, file = "data/organism.Rds")
 ```
 
