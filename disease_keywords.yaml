@@ -1,0 +1,76 @@
+## disease related keywords
+# this file is highly extensible with control vocabulary
+
+cancer:
+  name: "癌症"
+  pattern: "cancer|\\btumo[:alpha:]+|oncology|melanoma|carcino[:alpha:]+"
+
+
+CVD: 
+  name: "心血管疾病"
+  pattern: "heart|cardi[:alpha:]+|hypertension|athero[:alpha:]"
+  subtype: 
+    stroke: "stroke"
+    hypertension: "blood pressure|hypertension"
+    heart_attack: "heart"
+    atherosis: "arterial|atherosis|athero[:alpha:]"
+  
+
+IBD: 
+  name: "炎症性肠病"
+  pattern: "IBD|inflammatory bowl disease|ulcerative colitis|crohn.{1,5}disease|\\bUC\\b"
+
+
+IBS: 
+  name: "肠易激综合征"
+  pattern: "\\bIBS\\b|irritable bowel syndrome"
+
+
+Alzheimer:
+  name: "阿尔兹海默症"
+  pattern: "Alzheimer.{1,5}disease"
+  
+
+autism: 
+  name: "自闭症"
+  pattern: "autism"
+
+
+hepatology:
+  name: "肝病"
+  pattern: "NAFLD|non.?alcoholic fatty liver disease"
+
+
+allergy: 
+  name: "过敏"
+  pattern: "\\ballerg.*\\b"
+
+
+obesity:
+  name: "肥胖"
+  pattern: "obesity"
+
+
+diabetes:
+  name: "糖尿病"
+  pattern: "diabetes"
+  subtype: 
+    T1D: "type [1I]"
+    T2D: "type (2|II)"
+
+asthma:
+  name: "哮喘"
+  pattern: "asthma"
+  secondary: NULL
+  
+
+diarrhea:
+  name: "腹泻"
+  pattern: "diarrhea"
+
+
+constipation: 
+  name: "便秘"
+  pattern: "\\bconstip.*\\b"
+  secondary: NULL
+  
