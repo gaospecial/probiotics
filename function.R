@@ -49,3 +49,6 @@ simplify_document_type <- function(x){
 source("geocode.R")
 source("hbarplot.R")
 source("network.R")
+source("content.R")
+source("bibliometrix.R")
+
