@@ -85,7 +85,7 @@ extract_from_hist_graph <- function(M=NULL, g=NULL){
   name <- V(g)$name
   doi <- str_extract_all(name, "10\\.[0-9]+\\/\\S+")
   doi <- unlist(doi)
-  M %>% filter(DI %in% doi)
+  M %>% filter(toupper(DI) %in% toupper(doi))
 }
 
 # 输出部分内容
@@ -96,7 +96,7 @@ DT_output <- function(M, caption = "",
   if ("SR" %in% columns) rownames(M) <- M$SR
   M$link <- permanent_link(type = "html",id=M$DI, title = M$TI, alt = "")
   DT::datatable(M %>% select(link,TC),
-                colnames = c("文章标题","被引频次"),
+                colnames = c("Title","Cited times"),
                 escape = FALSE,
                 rownames = TRUE,
                 filter = "top",

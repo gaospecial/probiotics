@@ -61,7 +61,7 @@ country_network(M,nNode = 10,delete_isolate=FALSE,edge_weight_cutoff = 8)
 一家名为 “Teagasc Food Research Center” 的研究中心脱颖而出，
 占据网络的 C 位。
 
-据了解，[Teagasc Food Research Center](https://www.teagasc.ie/) 是
+据了解，[Teagasc Food Research Center](https://www.teagasc.ie/) 
 是隶属于爱尔兰农业与食品发展部的一家官方研究机构，
 是爱尔兰负责农业食品研发、培训及咨询服务的一个权威机构。
 
