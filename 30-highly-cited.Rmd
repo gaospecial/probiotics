@@ -1,2 +1,129 @@
 # 从高被引论文看研究热点 {#highly-cited}
 
+高被引论文是论文中最受关注的那些少量文献，粗略估计，
+益生菌研究的高被引论文仅占全部益生菌文献的 1.5% 左右。
+通过对这些百里挑一文献的深度解读，我们将能够深入理解益生菌研究的内涵。
+
+```{r}
+M <- readRDS("data/highly_cited.RDS")
+```
+
+## 高引论文四维概览
+
+首先从四个维度来看一下高引论文的概况。
+
+```{r}
+caption <- paste0( "以高被引论文为代表的",
+                   "益生菌研究的简要信息。",
+                   "（A）发表文章最多的10位科学家；",
+                   "（B）发表文章最多的10个国家；",
+                   "（C）发表文章最多的10家机构；",
+                   "（D）发表文章最多的10本杂志。")
+```
+
+```{r highly-cited-4d-barplot, fig.cap=caption_download(caption)}
+four_dimension_barplot(M)
+```
+图 \@ref(fig:highly-cited-4d-barplot) 展示了高被引论文 4 个方面的简略信息。
+从中我们可以看到杰出的科学家、主要的参与国家、代表性的科研机构和主流的期刊等信息。
+
+## 大佬
+
+图 \@ref(fig:highly-cited-authorProdOverTime) 展示了最突出的十位科学家。
+
+```{r highly-cited-authorProdOverTime, fig.cap=caption_download("十大科学家的发文量")}
+authorProdOverTime2(M) +
+  labs(y="")
+```
+这十位大佬中，除了其中的一位比较特立独行，其余的七位之间存在或多或少的联系，
+并分成了两个集团（图 \@ref(fig:highlycited-author-net)）。
+特别是 John F. Cryan 和 Timothy G. Dinan 两位多年来共同署名了几乎所有的论文
+（图 \@ref(fig:highly-cited-authorProdOverTime) ），
+可谓是益生菌研究领域珠联璧合的一对。
+
+```{r highlycited-author-net, fig.cap="十大科学家的合作网络"}
+author_network(M, nNode = 10, delete_isolate = FALSE, edge_weight_cutoff = 1)
+```
+
+## 力量
+
+
+在高被引论文集中，前十位的国家包括北美两国、欧洲六国、中国和澳大利亚（图 \@ref(fig:highly-cited-4d-barplot)B）。
+美国处于合作网络的中心（图 \@ref(fig:highlycited-country-net)），
+且其与加拿大、英国、意大利等国之间的联系更为紧密。
+
+```{r highlycited-country-net, fig.cap="高引论文的国际合作网络"}
+country_network(M,nNode = 10,delete_isolate=FALSE,edge_weight_cutoff = 8)
+```
+
+由于数目众多，研究机构间的合作关系相对要稀释很多，
+但是，十大机构的合作网络仍然呈现出较为明显的中心化趋势，
+一家名为 “Teagasc Food Research Center” 的研究中心脱颖而出，
+占据网络的 C 位。
+
+据了解，[Teagasc Food Research Center](https://www.teagasc.ie/) 是
+是隶属于爱尔兰农业与食品发展部的一家官方研究机构，
+是爱尔兰负责农业食品研发、培训及咨询服务的一个权威机构。
+
+```{r highlycited-university-net, fig.cap="十大机构合作网络"}
+university_network(M,nNode = 10, delete_isolate = FALSE, edge_weight_cutoff = 2)
+```
+
+
+
+## 研究脉络
+
+> 举一纲而万目张，解一卷而众篇明。于力则鲜，于思则寡，其诸君子，亦有乐于是与。
+> —— 东汉郑玄
+
+```{r highlycited-histnet, fig.cap=caption_download("高引论文的研究脉络")}
+research_article <- M %>% filter(DT == "ARTICLE")
+histNet <- histNetwork(research_article, verbose = FALSE)
+graph <- histPlot(histNet, verbose = FALSE)
+graph$g
+```
+
+图 \@ref(fig:highlycited-histnet) 是益生菌关键研究的印证关系，借此可以梳理研究的历史脉络。
+相关论文的详细信息列在图 \@ref(fig:highlycited-vip-table) 中。
+
+***Note：需要阅读上述文献，才能提炼出研究脉络的种种。***
+
+```{r highlycited-vip-table, fig.cap="关键论文的清单"}
+vip <- extract_from_hist_graph(M, graph$net)
+DT_output(vip)
+```
+
+通过上面分析，结合关键词的共现网络（图 \@ref(fig:highlycited-keyword-network)）可见：
+
+- 观点一；
+- 观点二。
+
+```{r highlycited-keyword-network, fig.cap="关键词的共现网络"}
+keyword_network(M, nNode = 30, edge_weight_cutoff = 8, delete_isolate=FALSE)
+```
+
+## 疾病
+
+在图 \@ref(fig:highlycited-keyword-network) 中，已经可见几个疾病相关的关键词，
+如 IBD，IBS，克罗恩病等。那究竟哪些疾病相关的研究更为充分呢？
+
+```{r}
+keyword <- yaml::read_yaml("disease_keywords.yaml")
+article_by_disease <- lapply(seq_along(keyword), function(i){
+  pattern <- keyword[[i]]$pattern
+  M %>% 
+    mutate(content = paste(TI,AB,DE)) %>% 
+    filter(str_detect(content, regex(pattern, ingore_case = TRUE, fixed = TRUE)))
+})
+disease_name <- sapply(seq_along(keyword), function(i) names(keyword[i]))
+disease_name_cn <- sapply(seq_along(keyword), function(i) keyword[[i]]$name)
+```
+
+```{r}
+count <- tibble(disease = disease_name_cn,
+                n = sapply(article_by_disease, nrow)) %>%
+  arrange(desc(n))
+hbarplot(count) +
+  labs(x="",y="",title = "高引论文涉及的益生菌适应症")
+```
+
