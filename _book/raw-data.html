@@ -24,7 +24,7 @@
 <meta name="author" content="高春辉" />
 
 
-<meta name="date" content="2020-12-19" />
+<meta name="date" content="2020-12-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,12 +54,27 @@
 <link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
 <script src="libs/anchor-sections/anchor-sections.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="libs/plotly-binding/plotly.js"></script>
-<script src="libs/typedarray/typedarray.min.js"></script>
+<link href="libs/vis/vis.css" rel="stylesheet" />
+<script src="libs/vis/vis.min.js"></script>
+<script src="libs/visNetwork-binding/visNetwork.js"></script>
+<link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding/datatables.js"></script>
+<link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+<script src="libs/jszip/jszip.min.js"></script>
+<link href="libs/dt-ext-buttons/css/buttons.dataTables.min.css" rel="stylesheet" />
+<script src="libs/dt-ext-buttons/js/dataTables.buttons.min.js"></script>
+<script src="libs/dt-ext-buttons/js/buttons.flash.min.js"></script>
+<script src="libs/dt-ext-buttons/js/buttons.html5.min.js"></script>
+<script src="libs/dt-ext-buttons/js/buttons.colVis.min.js"></script>
+<script src="libs/dt-ext-buttons/js/buttons.print.min.js"></script>
+<link href="libs/nouislider/jquery.nouislider.min.css" rel="stylesheet" />
+<script src="libs/nouislider/jquery.nouislider.min.js"></script>
+<link href="libs/selectize/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="libs/selectize/selectize.min.js"></script>
 <link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk/js/crosstalk.min.js"></script>
-<link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotly-main/plotly-latest.min.js"></script>
 
 
 <style type="text/css">
@@ -170,7 +185,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5" data-path="china-study.html"><a href="china-study.html#期刊-1"><i class="fa fa-check"></i><b>3.5</b> 期刊</a></li>
 <li class="chapter" data-level="3.6" data-path="china-study.html"><a href="china-study.html#知名研究机构-1"><i class="fa fa-check"></i><b>3.6</b> 知名研究机构</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="highly-cited.html"><a href="highly-cited.html"><i class="fa fa-check"></i><b>4</b> 从高被引论文看研究热点</a></li>
+<li class="chapter" data-level="4" data-path="highly-cited.html"><a href="highly-cited.html"><i class="fa fa-check"></i><b>4</b> 从高被引论文看研究热点</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="highly-cited.html"><a href="highly-cited.html#高引论文四维概览"><i class="fa fa-check"></i><b>4.1</b> 高引论文四维概览</a></li>
+<li class="chapter" data-level="4.2" data-path="highly-cited.html"><a href="highly-cited.html#大佬"><i class="fa fa-check"></i><b>4.2</b> 大佬</a></li>
+<li class="chapter" data-level="4.3" data-path="highly-cited.html"><a href="highly-cited.html#力量"><i class="fa fa-check"></i><b>4.3</b> 力量</a></li>
+<li class="chapter" data-level="4.4" data-path="highly-cited.html"><a href="highly-cited.html#研究脉络"><i class="fa fa-check"></i><b>4.4</b> 研究脉络</a></li>
+<li class="chapter" data-level="4.5" data-path="highly-cited.html"><a href="highly-cited.html#疾病"><i class="fa fa-check"></i><b>4.5</b> 疾病</a></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="china-detailed.html"><a href="china-detailed.html"><i class="fa fa-check"></i><b>5</b> 深度剖析中国的益生菌研究</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>参考文献</a></li>
 <li class="divider"></li>
@@ -215,14 +237,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>#4，即由中国人发表（含参与）的全部与益生菌相关研究的高被引论文的完整内容。</li>
 </ul>
 <p>WoS 导出的数据主要由 <code>bibliometrix</code> 软件包处理。</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="raw-data.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bibliometrix)</span>
-<span id="cb2-2"><a href="raw-data.html#cb2-2" aria-hidden="true" tabindex="-1"></a>highly_cited_export <span class="ot">&lt;-</span> <span class="st">&quot;data-raw/probiotic-full-result-highly-cited-record-export.txt&quot;</span></span>
-<span id="cb2-3"><a href="raw-data.html#cb2-3" aria-hidden="true" tabindex="-1"></a>china_study_export <span class="ot">&lt;-</span> <span class="st">&quot;data-raw/probiotic-china-result-record-export.txt&quot;</span></span>
-<span id="cb2-4"><a href="raw-data.html#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="raw-data.html#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># in the latest version, convert2df() runs much faster than before</span></span>
-<span id="cb2-6"><a href="raw-data.html#cb2-6" aria-hidden="true" tabindex="-1"></a>highly_cited <span class="ot">&lt;-</span> <span class="fu">convert2df</span>(<span class="at">file =</span> highly_cited_export,</span>
-<span id="cb2-7"><a href="raw-data.html#cb2-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">dbsource =</span> <span class="st">&quot;wos&quot;</span>,</span>
-<span id="cb2-8"><a href="raw-data.html#cb2-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">format =</span> <span class="st">&quot;plaintext&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="raw-data.html#cb2-1" aria-hidden="true" tabindex="-1"></a>highly_cited_export <span class="ot">&lt;-</span> <span class="st">&quot;data-raw/probiotic-full-result-highly-cited-record-export.txt&quot;</span></span>
+<span id="cb2-2"><a href="raw-data.html#cb2-2" aria-hidden="true" tabindex="-1"></a>china_study_export <span class="ot">&lt;-</span> <span class="st">&quot;data-raw/probiotic-china-result-record-export.txt&quot;</span></span>
+<span id="cb2-3"><a href="raw-data.html#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="raw-data.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># in the latest version, convert2df() runs much faster than before</span></span>
+<span id="cb2-5"><a href="raw-data.html#cb2-5" aria-hidden="true" tabindex="-1"></a>highly_cited <span class="ot">&lt;-</span> <span class="fu">convert2df</span>(<span class="at">file =</span> highly_cited_export,</span>
+<span id="cb2-6"><a href="raw-data.html#cb2-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">dbsource =</span> <span class="st">&quot;wos&quot;</span>,</span>
+<span id="cb2-7"><a href="raw-data.html#cb2-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">format =</span> <span class="st">&quot;plaintext&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## Converting your wos collection into a bibliographic dataframe
 ## 
@@ -276,44 +297,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb9-13"><a href="raw-data.html#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-14"><a href="raw-data.html#cb9-14" aria-hidden="true" tabindex="-1"></a>highly_cited <span class="ot">&lt;-</span> <span class="fu">uniq_tag</span>(highly_cited)</span>
 <span id="cb9-15"><a href="raw-data.html#cb9-15" aria-hidden="true" tabindex="-1"></a>china_study <span class="ot">&lt;-</span> <span class="fu">uniq_tag</span>(china_study)</span></code></pre></div>
+<p>整合作者单位信息。</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="raw-data.html#cb10-1" aria-hidden="true" tabindex="-1"></a>highly_cited <span class="ot">&lt;-</span> <span class="fu">uniq_tag</span>(highly_cited, <span class="at">Field =</span> <span class="st">&quot;AU_UN&quot;</span>)</span>
+<span id="cb10-2"><a href="raw-data.html#cb10-2" aria-hidden="true" tabindex="-1"></a>china_study <span class="ot">&lt;-</span> <span class="fu">uniq_tag</span>(china_study, <span class="at">Field =</span> <span class="st">&quot;AU_UN&quot;</span>)</span></code></pre></div>
 <p>综上所述，文献数据的预处理包括对 WoS 数据的规范和添加一些辅助信息，
 以便为后续的分析打好基础。
 预处理后的数据保存下来，供后续使用时调用。</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="raw-data.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(highly_cited, <span class="at">file =</span> <span class="st">&quot;data/highly_cited.RDS&quot;</span>)</span>
-<span id="cb10-2"><a href="raw-data.html#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(china_study, <span class="at">file =</span> <span class="st">&quot;data/china_study.RDS&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="raw-data.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(highly_cited, <span class="at">file =</span> <span class="st">&quot;data/highly_cited.RDS&quot;</span>)</span>
+<span id="cb11-2"><a href="raw-data.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(china_study, <span class="at">file =</span> <span class="st">&quot;data/china_study.RDS&quot;</span>)</span></code></pre></div>
 </div>
 <div id="物种信息的处理" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> 物种信息的处理</h2>
 <p>常见的益生菌是各种乳酸菌，在微生物分类学上通常来源于两个属（genus）：
 <em>Bifidobacterium</em> 和 <em>Lactobacillus</em>。但是，并非全部的益生菌都来源于这两个属。</p>
 <p>为了尽可能的确定每一篇文献中描述的益生菌来源，我们需要构建一个微生物属名数据库。
-经过调研，最终决定依托 ‘The All-Species Living Tree’ Project （LTP）来完成。</p>
+经过调研，最终决定依托 <a href="https://www.arb-silva.de/projects/living-tree/">‘The All-Species Living Tree’ Project （LTP）</a>来完成。</p>
 <p>LTP 维护了现有已知的所有物种名称，因此我们可以从中提取出属名，
 在此基础上根据属名的检索结果确定每一个益生菌研究中所用的益生菌的类型。</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="raw-data.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtree)</span>
-<span id="cb11-2"><a href="raw-data.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(treeio)</span>
-<span id="cb11-3"><a href="raw-data.html#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="raw-data.html#cb11-4" aria-hidden="true" tabindex="-1"></a>read.newick <span class="ot">&lt;-</span> <span class="cf">function</span>(file, <span class="at">node.label =</span> <span class="st">&quot;label&quot;</span>, ...) {</span>
-<span id="cb11-5"><a href="raw-data.html#cb11-5" aria-hidden="true" tabindex="-1"></a>    node.label <span class="ot">&lt;-</span> <span class="fu">match.arg</span>(node.label, <span class="fu">c</span>(<span class="st">&quot;support&quot;</span>, <span class="st">&quot;label&quot;</span>))</span>
-<span id="cb11-6"><a href="raw-data.html#cb11-6" aria-hidden="true" tabindex="-1"></a>    tree_data <span class="ot">&lt;-</span> <span class="fu">scan</span>(<span class="at">file =</span> file, <span class="at">what =</span> <span class="st">&quot;&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>, <span class="at">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>, ...)</span>
-<span id="cb11-7"><a href="raw-data.html#cb11-7" aria-hidden="true" tabindex="-1"></a>    tree_data <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot; &quot;</span>,<span class="st">&quot;,&quot;</span>,tree_data)</span>
-<span id="cb11-8"><a href="raw-data.html#cb11-8" aria-hidden="true" tabindex="-1"></a>    tree_data <span class="ot">&lt;-</span> <span class="fu">paste0</span>(tree_data, <span class="at">collapse =</span> <span class="st">&quot;&quot;</span>)</span>
-<span id="cb11-9"><a href="raw-data.html#cb11-9" aria-hidden="true" tabindex="-1"></a>    tree <span class="ot">&lt;-</span> <span class="fu">read.tree</span>(<span class="at">text =</span> tree_data)</span>
-<span id="cb11-10"><a href="raw-data.html#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (node.label <span class="sc">==</span> <span class="st">&quot;label&quot;</span>)</span>
-<span id="cb11-11"><a href="raw-data.html#cb11-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(tree)</span>
-<span id="cb11-12"><a href="raw-data.html#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-13"><a href="raw-data.html#cb11-13" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">node =</span> <span class="fu">nodeIds</span>(tree),</span>
-<span id="cb11-14"><a href="raw-data.html#cb11-14" aria-hidden="true" tabindex="-1"></a>                     <span class="at">support =</span> <span class="fu">as.numeric</span>(tree<span class="sc">$</span>node.label))</span>
-<span id="cb11-15"><a href="raw-data.html#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-16"><a href="raw-data.html#cb11-16" aria-hidden="true" tabindex="-1"></a>    tree<span class="sc">$</span>node.label <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb11-17"><a href="raw-data.html#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">new</span>(<span class="st">&quot;treedata&quot;</span>,</span>
-<span id="cb11-18"><a href="raw-data.html#cb11-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">phylo =</span> tree,</span>
-<span id="cb11-19"><a href="raw-data.html#cb11-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> df)</span>
-<span id="cb11-20"><a href="raw-data.html#cb11-20" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb11-21"><a href="raw-data.html#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-22"><a href="raw-data.html#cb11-22" aria-hidden="true" tabindex="-1"></a>ltp <span class="ot">&lt;-</span> <span class="fu">read.newick</span>(<span class="at">file =</span> <span class="st">&quot;data-raw/LTPs132_SSU_tree.newick&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="raw-data.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtree)</span>
+<span id="cb12-2"><a href="raw-data.html#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(treeio)</span>
+<span id="cb12-3"><a href="raw-data.html#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="raw-data.html#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># there is a bug in read.tree, see https://github.com/YuLab-SMU/treeio/pull/41</span></span>
+<span id="cb12-5"><a href="raw-data.html#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># &#39;The All-Species Living Tree&#39; Project </span></span>
+<span id="cb12-6"><a href="raw-data.html#cb12-6" aria-hidden="true" tabindex="-1"></a>file_SSU <span class="ot">=</span> <span class="st">&quot;data-raw/LTPs132_SSU_tree.newick&quot;</span></span>
+<span id="cb12-7"><a href="raw-data.html#cb12-7" aria-hidden="true" tabindex="-1"></a>tree_data <span class="ot">&lt;-</span> <span class="fu">scan</span>(<span class="at">file =</span> file_SSU, </span>
+<span id="cb12-8"><a href="raw-data.html#cb12-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">what =</span> <span class="st">&quot;&quot;</span>, </span>
+<span id="cb12-9"><a href="raw-data.html#cb12-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, </span>
+<span id="cb12-10"><a href="raw-data.html#cb12-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">quiet =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb12-11"><a href="raw-data.html#cb12-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>)</span>
+<span id="cb12-12"><a href="raw-data.html#cb12-12" aria-hidden="true" tabindex="-1"></a>tree_data <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot; &quot;</span>,<span class="st">&quot;_&quot;</span>,tree_data)</span>
+<span id="cb12-13"><a href="raw-data.html#cb12-13" aria-hidden="true" tabindex="-1"></a>tree_data <span class="ot">&lt;-</span> <span class="fu">paste0</span>(tree_data, <span class="at">collapse =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb12-14"><a href="raw-data.html#cb12-14" aria-hidden="true" tabindex="-1"></a>ltp_SSU <span class="ot">&lt;-</span> <span class="fu">read.tree</span>(<span class="at">text =</span> tree_data)</span>
+<span id="cb12-15"><a href="raw-data.html#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="raw-data.html#cb12-16" aria-hidden="true" tabindex="-1"></a>SSU_file <span class="ot">&lt;-</span> <span class="st">&quot;data-raw/LTPs123_LSU_tree.newick&quot;</span></span>
+<span id="cb12-17"><a href="raw-data.html#cb12-17" aria-hidden="true" tabindex="-1"></a>ltp_LSU <span class="ot">&lt;-</span> <span class="fu">read.tree</span>(<span class="at">file =</span> SSU_file, <span class="at">skip =</span>  <span class="dv">11</span>)</span></code></pre></div>
 <p>图 <a href="raw-data.html#fig:ltp-tree">1.2</a> 可以一瞥所有这些物种。不过我们关心的是属名。</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="raw-data.html#cb12-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;figure/ltp-tree.png&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="raw-data.html#cb13-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;figure/ltp-tree.png&quot;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:ltp-tree"></span>
 <img src="figure/ltp-tree.png" alt="全部物种的进化树" width="1050" />
 <p class="caption">
@@ -321,19 +340,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </p>
 </div>
 <p>所以，我们从 <code>tip.label</code> 中提取物种的信息，并保存到 <code>organism.Rds</code> 中。</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="raw-data.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb13-2"><a href="raw-data.html#cb13-2" aria-hidden="true" tabindex="-1"></a>organism <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">ltp =</span> ltp<span class="sc">$</span>tip.label) <span class="sc">%&gt;%</span></span>
-<span id="cb13-3"><a href="raw-data.html#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> ltp, </span>
-<span id="cb13-4"><a href="raw-data.html#cb13-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;accession&quot;</span>,<span class="st">&quot;genus_species&quot;</span>,<span class="st">&quot;family&quot;</span>,<span class="st">&quot;extra&quot;</span>),</span>
-<span id="cb13-5"><a href="raw-data.html#cb13-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">&quot;_,&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb13-6"><a href="raw-data.html#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> genus_species,</span>
-<span id="cb13-7"><a href="raw-data.html#cb13-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;genus&quot;</span>,<span class="st">&quot;species&quot;</span>),</span>
-<span id="cb13-8"><a href="raw-data.html#cb13-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>,</span>
-<span id="cb13-9"><a href="raw-data.html#cb13-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">extra =</span> <span class="st">&quot;drop&quot;</span>)  <span class="co"># extra is subsp. info</span></span>
-<span id="cb13-10"><a href="raw-data.html#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(organism, <span class="at">file =</span> <span class="st">&quot;data/organism.Rds&quot;</span>)</span></code></pre></div>
-<p>这些物种共有 13903 个，
-来自于 2720 个不同的属，
-444 个不同的科。</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="raw-data.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb14-2"><a href="raw-data.html#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="raw-data.html#cb14-3" aria-hidden="true" tabindex="-1"></a>prokaryotic_organism <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">ltp =</span> ltp_SSU<span class="sc">$</span>tip.label) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="raw-data.html#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> ltp, </span>
+<span id="cb14-5"><a href="raw-data.html#cb14-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;accession&quot;</span>,<span class="st">&quot;genus_species&quot;</span>,<span class="st">&quot;family&quot;</span>),</span>
+<span id="cb14-6"><a href="raw-data.html#cb14-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">&quot;__&quot;</span>,</span>
+<span id="cb14-7"><a href="raw-data.html#cb14-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">extra =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-8"><a href="raw-data.html#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> genus_species,</span>
+<span id="cb14-9"><a href="raw-data.html#cb14-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;genus&quot;</span>,<span class="st">&quot;species&quot;</span>),</span>
+<span id="cb14-10"><a href="raw-data.html#cb14-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>,</span>
+<span id="cb14-11"><a href="raw-data.html#cb14-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">extra =</span> <span class="st">&quot;drop&quot;</span>)  <span class="co"># extra is subsp. info</span></span>
+<span id="cb14-12"><a href="raw-data.html#cb14-12" aria-hidden="true" tabindex="-1"></a>eukaryotic_organism <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">ltp =</span> ltp_LSU<span class="sc">$</span>tip.label) <span class="sc">%&gt;%</span></span>
+<span id="cb14-13"><a href="raw-data.html#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> ltp, </span>
+<span id="cb14-14"><a href="raw-data.html#cb14-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;genus_species&quot;</span>,<span class="st">&quot;accession&quot;</span>,<span class="st">&quot;family&quot;</span>),</span>
+<span id="cb14-15"><a href="raw-data.html#cb14-15" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">&quot;__&quot;</span>,</span>
+<span id="cb14-16"><a href="raw-data.html#cb14-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">extra =</span> <span class="st">&quot;drop&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-17"><a href="raw-data.html#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> genus_species,</span>
+<span id="cb14-18"><a href="raw-data.html#cb14-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;genus&quot;</span>,<span class="st">&quot;species&quot;</span>),</span>
+<span id="cb14-19"><a href="raw-data.html#cb14-19" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>,</span>
+<span id="cb14-20"><a href="raw-data.html#cb14-20" aria-hidden="true" tabindex="-1"></a>           <span class="at">extra =</span> <span class="st">&quot;drop&quot;</span>)  <span class="co"># extra is subsp. info</span></span>
+<span id="cb14-21"><a href="raw-data.html#cb14-21" aria-hidden="true" tabindex="-1"></a>organism <span class="ot">&lt;-</span> <span class="fu">rbind</span>(prokaryotic_organism, eukaryotic_organism)</span>
+<span id="cb14-22"><a href="raw-data.html#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(organism, <span class="at">file =</span> <span class="st">&quot;data/organism.Rds&quot;</span>)</span></code></pre></div>
+<p>这些物种共有 15517 个，
+来自于 2724 个不同的属，
+449 个不同的科。</p>
 
 </div>
 </div>

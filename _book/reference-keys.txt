@@ -14,6 +14,14 @@ fig:china-document-type
 fig:china-source
 fig:china-organization
 fig:china-organization-location
+fig:highly-cited-4d-barplot
+fig:highly-cited-authorProdOverTime
+fig:highlycited-author-net
+fig:highlycited-country-net
+fig:highlycited-university-net
+fig:highlycited-histnet
+fig:highlycited-vip-table
+fig:highlycited-keyword-network
 raw-data
 文献数据的预处理
 物种信息的处理
@@ -32,4 +40,9 @@ china-study
 期刊-1
 知名研究机构-1
 highly-cited
+高引论文四维概览
+大佬
+力量
+研究脉络
+疾病
 china-detailed

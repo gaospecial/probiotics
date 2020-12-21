@@ -24,7 +24,7 @@
 <meta name="author" content="高春辉" />
 
 
-<meta name="date" content="2020-12-19" />
+<meta name="date" content="2020-12-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,12 +54,27 @@
 <link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
 <script src="libs/anchor-sections/anchor-sections.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="libs/plotly-binding/plotly.js"></script>
-<script src="libs/typedarray/typedarray.min.js"></script>
+<link href="libs/vis/vis.css" rel="stylesheet" />
+<script src="libs/vis/vis.min.js"></script>
+<script src="libs/visNetwork-binding/visNetwork.js"></script>
+<link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding/datatables.js"></script>
+<link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+<script src="libs/jszip/jszip.min.js"></script>
+<link href="libs/dt-ext-buttons/css/buttons.dataTables.min.css" rel="stylesheet" />
+<script src="libs/dt-ext-buttons/js/dataTables.buttons.min.js"></script>
+<script src="libs/dt-ext-buttons/js/buttons.flash.min.js"></script>
+<script src="libs/dt-ext-buttons/js/buttons.html5.min.js"></script>
+<script src="libs/dt-ext-buttons/js/buttons.colVis.min.js"></script>
+<script src="libs/dt-ext-buttons/js/buttons.print.min.js"></script>
+<link href="libs/nouislider/jquery.nouislider.min.css" rel="stylesheet" />
+<script src="libs/nouislider/jquery.nouislider.min.js"></script>
+<link href="libs/selectize/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="libs/selectize/selectize.min.js"></script>
 <link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk/js/crosstalk.min.js"></script>
-<link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotly-main/plotly-latest.min.js"></script>
 
 
 <style type="text/css">
@@ -170,7 +185,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5" data-path="china-study.html"><a href="china-study.html#期刊-1"><i class="fa fa-check"></i><b>3.5</b> 期刊</a></li>
 <li class="chapter" data-level="3.6" data-path="china-study.html"><a href="china-study.html#知名研究机构-1"><i class="fa fa-check"></i><b>3.6</b> 知名研究机构</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="highly-cited.html"><a href="highly-cited.html"><i class="fa fa-check"></i><b>4</b> 从高被引论文看研究热点</a></li>
+<li class="chapter" data-level="4" data-path="highly-cited.html"><a href="highly-cited.html"><i class="fa fa-check"></i><b>4</b> 从高被引论文看研究热点</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="highly-cited.html"><a href="highly-cited.html#高引论文四维概览"><i class="fa fa-check"></i><b>4.1</b> 高引论文四维概览</a></li>
+<li class="chapter" data-level="4.2" data-path="highly-cited.html"><a href="highly-cited.html#大佬"><i class="fa fa-check"></i><b>4.2</b> 大佬</a></li>
+<li class="chapter" data-level="4.3" data-path="highly-cited.html"><a href="highly-cited.html#力量"><i class="fa fa-check"></i><b>4.3</b> 力量</a></li>
+<li class="chapter" data-level="4.4" data-path="highly-cited.html"><a href="highly-cited.html#研究脉络"><i class="fa fa-check"></i><b>4.4</b> 研究脉络</a></li>
+<li class="chapter" data-level="4.5" data-path="highly-cited.html"><a href="highly-cited.html#疾病"><i class="fa fa-check"></i><b>4.5</b> 疾病</a></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="china-detailed.html"><a href="china-detailed.html"><i class="fa fa-check"></i><b>5</b> 深度剖析中国的益生菌研究</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>参考文献</a></li>
 <li class="divider"></li>
@@ -195,7 +217,112 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="highly-cited" class="section level1" number="4">
 <h1><span class="header-section-number">第 4 章</span> 从高被引论文看研究热点</h1>
+<p>高被引论文是论文中最受关注的那些少量文献，粗略估计，
+益生菌研究的高被引论文仅占全部益生菌文献的 1.5% 左右。
+通过对这些百里挑一文献的深度解读，我们将能够深入理解益生菌研究的内涵。</p>
+<div id="高引论文四维概览" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> 高引论文四维概览</h2>
+<p>首先从四个维度来看一下高引论文的概况。</p>
+<div class="figure"><span id="fig:highly-cited-4d-barplot"></span>
+<img src="plot/highly-cited-4d-barplot-1.png" alt="以高被引论文为代表的益生菌研究的简要信息。（A）发表文章最多的10位科学家；（B）发表文章最多的10个国家；（C）发表文章最多的10家机构；（D）发表文章最多的10本杂志。 [ppt](plot/highly-cited-4d-barplot-1.pptx), [pdf](plot/highly-cited-4d-barplot-1.pdf)" width="672" />
+<p class="caption">
+图 4.1: 以高被引论文为代表的益生菌研究的简要信息。（A）发表文章最多的10位科学家；（B）发表文章最多的10个国家；（C）发表文章最多的10家机构；（D）发表文章最多的10本杂志。 <a href="plot/highly-cited-4d-barplot-1.pptx">ppt</a>, <a href="plot/highly-cited-4d-barplot-1.pdf">pdf</a>
+</p>
+</div>
+<p>图 <a href="highly-cited.html#fig:highly-cited-4d-barplot">4.1</a> 展示了高被引论文 4 个方面的简略信息。
+从中我们可以看到杰出的科学家、主要的参与国家、代表性的科研机构和主流的期刊等信息。</p>
+</div>
+<div id="大佬" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> 大佬</h2>
+<p>图 <a href="highly-cited.html#fig:highly-cited-authorProdOverTime">4.2</a> 展示了最突出的十位科学家。</p>
+<div class="figure"><span id="fig:highly-cited-authorProdOverTime"></span>
+<img src="plot/highly-cited-authorProdOverTime-1.png" alt="十大科学家的发文量 [ppt](plot/highly-cited-authorProdOverTime-1.pptx), [pdf](plot/highly-cited-authorProdOverTime-1.pdf)" width="672" />
+<p class="caption">
+图 4.2: 十大科学家的发文量 <a href="plot/highly-cited-authorProdOverTime-1.pptx">ppt</a>, <a href="plot/highly-cited-authorProdOverTime-1.pdf">pdf</a>
+</p>
+</div>
+<p>这十位大佬中，除了其中的一位比较特立独行，其余的七位之间存在或多或少的联系，
+并分成了两个集团（图 <a href="highly-cited.html#fig:highlycited-author-net">4.3</a>）。
+特别是 John F. Cryan 和 Timothy G. Dinan 两位多年来共同署名了几乎所有的论文
+（图 <a href="highly-cited.html#fig:highly-cited-authorProdOverTime">4.2</a> ），
+可谓是益生菌研究领域珠联璧合的一对。</p>
+<div class="figure"><span id="fig:highlycited-author-net"></span>
+<div id="htmlwidget-2ebbbb4136a081f7dfd8" style="width:672px;height:480px;" class="visNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2ebbbb4136a081f7dfd8">{"x":{"nodes":{"id":["HOSEINIFAR, SEYED HOSSEIN","DAWOOD, MAHMOUD A. O.","CRYAN, JOHN F.","DINAN, TIMOTHY G.","CRUZ, ADRIANO G.","STANTON, CATHERINE","RINGO, EINAR","ROSS, R. PAUL","CANI, PATRICE D.","COTTER, PAUL D."],"size":[4,4,4,4,2,7,4,4,3,4],"label":["HOSEINIFAR, SEYED HOSSEIN","DAWOOD, MAHMOUD A. O.","CRYAN, JOHN F.","DINAN, TIMOTHY G.","CRUZ, ADRIANO G.","STANTON, CATHERINE","RINGO, EINAR","ROSS, R. PAUL","CANI, PATRICE D.","COTTER, PAUL D."],"value":[2,2,2,2,0,5,2,2,1,2],"cluster":[3,3,1,1,2,4,3,4,4,4],"color":["#EB4445","#EB4445","#A6CEE3","#A6CEE3","#87CA6A","#FF7F00","#EB4445","#FF7F00","#FF7F00","#FF7F00"]},"edges":{"from":["HOSEINIFAR, SEYED HOSSEIN","HOSEINIFAR, SEYED HOSSEIN","DAWOOD, MAHMOUD A. O.","CRYAN, JOHN F.","CRYAN, JOHN F.","DINAN, TIMOTHY G.","STANTON, CATHERINE","STANTON, CATHERINE","STANTON, CATHERINE","ROSS, R. PAUL"],"to":["DAWOOD, MAHMOUD A. O.","RINGO, EINAR","RINGO, EINAR","DINAN, TIMOTHY G.","STANTON, CATHERINE","STANTON, CATHERINE","ROSS, R. PAUL","CANI, PATRICE D.","COTTER, PAUL D.","COTTER, PAUL D."],"weight":[1,6,1,15,3,3,6,1,2,4],"value":[1,6,1,15,3,3,6,1,2,4]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"layout":{"randomSeed":20200721},"interaction":{"hover":true}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","datacss":"table.legend_table {\n  font-size: 11px;\n  border-width:1px;\n  border-color:#d3d3d3;\n  border-style:solid;\n}\ntable.legend_table td {\n  border-width:1px;\n  border-color:#d3d3d3;\n  border-style:solid;\n  padding: 2px;\n}\ndiv.table_content {\n  width:80px;\n  text-align:center;\n}\ndiv.table_description {\n  width:100px;\n}\n\n#operation {\n  font-size:28px;\n}\n#network-popUp {\n  display:none;\n  z-index:299;\n  width:250px;\n  height:150px;\n  background-color: #f9f9f9;\n  border-style:solid;\n  border-width:3px;\n  border-color: #5394ed;\n  padding:10px;\n  text-align: center;\n  position:fixed;\n  top:50%;  \n  left:50%;  \n  margin:-100px 0 0 -100px;  \n\n}","tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);","highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+图 4.3: 十大科学家的合作网络
+</p>
+</div>
+</div>
+<div id="力量" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> 力量</h2>
+<p>在高被引论文集中，前十位的国家包括北美两国、欧洲六国、中国和澳大利亚（图 <a href="highly-cited.html#fig:highly-cited-4d-barplot">4.1</a>B）。
+美国处于合作网络的中心（图 <a href="highly-cited.html#fig:highlycited-country-net">4.4</a>），
+且其与加拿大、英国、意大利等国之间的联系更为紧密。</p>
+<div class="figure"><span id="fig:highlycited-country-net"></span>
+<div id="htmlwidget-94153f82d4fc2ea041e4" style="width:672px;height:480px;" class="visNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-94153f82d4fc2ea041e4">{"x":{"nodes":{"id":["ITALY","CHINA","USA","AUSTRALIA","SPAIN","UNITED KINGDOM","IRELAND","CANADA","FRANCE","NETHERLANDS"],"size":[11,11,11,11,11,11,11,11,11,11],"label":["ITALY","CHINA","USA","AUSTRALIA","SPAIN","UNITED KINGDOM","IRELAND","CANADA","FRANCE","NETHERLANDS"],"value":[5,1,9,1,3,7,3,4,4,3],"cluster":[2,1,1,1,2,2,1,1,1,2],"color":["#FF7F00","#A6CEE3","#A6CEE3","#A6CEE3","#FF7F00","#FF7F00","#A6CEE3","#A6CEE3","#A6CEE3","#FF7F00"]},"edges":{"from":["ITALY","ITALY","ITALY","ITALY","ITALY","CHINA","USA","USA","USA","USA","USA","USA","USA","SPAIN","UNITED KINGDOM","UNITED KINGDOM","UNITED KINGDOM","UNITED KINGDOM","IRELAND","CANADA"],"to":["USA","SPAIN","UNITED KINGDOM","FRANCE","NETHERLANDS","USA","AUSTRALIA","SPAIN","UNITED KINGDOM","IRELAND","CANADA","FRANCE","NETHERLANDS","UNITED KINGDOM","IRELAND","CANADA","FRANCE","NETHERLANDS","CANADA","FRANCE"],"weight":[17,9,12,8,10,15,8,11,19,14,25,14,14,9,9,12,10,13,10,9],"value":[17,9,12,8,10,15,8,11,19,14,25,14,14,9,9,12,10,13,10,9]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"layout":{"randomSeed":20200721},"interaction":{"hover":true}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","datacss":"table.legend_table {\n  font-size: 11px;\n  border-width:1px;\n  border-color:#d3d3d3;\n  border-style:solid;\n}\ntable.legend_table td {\n  border-width:1px;\n  border-color:#d3d3d3;\n  border-style:solid;\n  padding: 2px;\n}\ndiv.table_content {\n  width:80px;\n  text-align:center;\n}\ndiv.table_description {\n  width:100px;\n}\n\n#operation {\n  font-size:28px;\n}\n#network-popUp {\n  display:none;\n  z-index:299;\n  width:250px;\n  height:150px;\n  background-color: #f9f9f9;\n  border-style:solid;\n  border-width:3px;\n  border-color: #5394ed;\n  padding:10px;\n  text-align: center;\n  position:fixed;\n  top:50%;  \n  left:50%;  \n  margin:-100px 0 0 -100px;  \n\n}","tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);","highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+图 4.4: 高引论文的国际合作网络
+</p>
+</div>
+<p>由于数目众多，研究机构间的合作关系相对要稀释很多，
+但是，十大机构的合作网络仍然呈现出较为明显的中心化趋势，
+一家名为 “Teagasc Food Research Center” 的研究中心脱颖而出，
+占据网络的 C 位。</p>
+<p>据了解，<a href="https://www.teagasc.ie/">Teagasc Food Research Center</a> 是
+是隶属于爱尔兰农业与食品发展部的一家官方研究机构，
+是爱尔兰负责农业食品研发、培训及咨询服务的一个权威机构。</p>
+<div class="figure"><span id="fig:highlycited-university-net"></span>
+<div id="htmlwidget-dba3fe764517587cbf7e" style="width:672px;height:480px;" class="visNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-dba3fe764517587cbf7e">{"x":{"nodes":{"id":["GORGAN UNIV AGR SCI AND NAT RESOURCES","KAFRELSHEIKH UNIV","UNIV READING","UNIV COLL CORK","TEAGASC FOOD RES CTR","CATHOLIC UNIV LOUVAIN","UNIV CALIF LOS ANGELES","MCMASTER UNIV","WAGENINGEN UNIV","NATL UNIV IRELAND UNIV COLL CORK"],"size":[3,3,5,6,6,5,6,6,8,6],"label":["GORGAN UNIV AGR SCI AND NAT RESOURCES","KAFRELSHEIKH UNIV","UNIV READING","UNIV COLL CORK","TEAGASC FOOD RES CTR","CATHOLIC UNIV LOUVAIN","UNIV CALIF LOS ANGELES","MCMASTER UNIV","WAGENINGEN UNIV","NATL UNIV IRELAND UNIV COLL CORK"],"value":[0,0,1,2,3,2,1,1,2,2],"cluster":[1,2,4,3,3,4,5,3,4,5],"color":["#A6CEE3","#8DC594","#E94330","#979C62","#979C62","#E94330","#FF7F00","#979C62","#E94330","#FF7F00"]},"edges":{"from":["UNIV READING","UNIV COLL CORK","UNIV COLL CORK","TEAGASC FOOD RES CTR","TEAGASC FOOD RES CTR","CATHOLIC UNIV LOUVAIN","UNIV CALIF LOS ANGELES"],"to":["CATHOLIC UNIV LOUVAIN","TEAGASC FOOD RES CTR","MCMASTER UNIV","WAGENINGEN UNIV","NATL UNIV IRELAND UNIV COLL CORK","WAGENINGEN UNIV","NATL UNIV IRELAND UNIV COLL CORK"],"weight":[3,5,2,2,3,2,2],"value":[3,5,2,2,3,2,2]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"layout":{"randomSeed":20200721},"interaction":{"hover":true}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","datacss":"table.legend_table {\n  font-size: 11px;\n  border-width:1px;\n  border-color:#d3d3d3;\n  border-style:solid;\n}\ntable.legend_table td {\n  border-width:1px;\n  border-color:#d3d3d3;\n  border-style:solid;\n  padding: 2px;\n}\ndiv.table_content {\n  width:80px;\n  text-align:center;\n}\ndiv.table_description {\n  width:100px;\n}\n\n#operation {\n  font-size:28px;\n}\n#network-popUp {\n  display:none;\n  z-index:299;\n  width:250px;\n  height:150px;\n  background-color: #f9f9f9;\n  border-style:solid;\n  border-width:3px;\n  border-color: #5394ed;\n  padding:10px;\n  text-align: center;\n  position:fixed;\n  top:50%;  \n  left:50%;  \n  margin:-100px 0 0 -100px;  \n\n}","tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);","highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+图 4.5: 十大机构合作网络
+</p>
+</div>
+</div>
+<div id="研究脉络" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> 研究脉络</h2>
+<blockquote>
+<p>举一纲而万目张，解一卷而众篇明。于力则鲜，于思则寡，其诸君子，亦有乐于是与。
+—— 东汉郑玄</p>
+</blockquote>
+<div class="figure"><span id="fig:highlycited-histnet"></span>
+<img src="plot/highlycited-histnet-1.png" alt="高引论文的研究脉络 [ppt](plot/highlycited-histnet-1.pptx), [pdf](plot/highlycited-histnet-1.pdf)" width="672" />
+<p class="caption">
+图 4.6: 高引论文的研究脉络 <a href="plot/highlycited-histnet-1.pptx">ppt</a>, <a href="plot/highlycited-histnet-1.pdf">pdf</a>
+</p>
+</div>
+<p>图 <a href="highly-cited.html#fig:highlycited-histnet">4.6</a> 是益生菌关键研究的印证关系，借此可以梳理研究的历史脉络。
+相关论文的详细信息列在图 <a href="highly-cited.html#fig:highlycited-vip-table">4.7</a> 中。</p>
+<p><strong><em>Note：需要阅读上述文献，才能提炼出研究脉络的种种。</em></strong></p>
+<div class="figure"><span id="fig:highlycited-vip-table"></span>
+<div id="htmlwidget-7f7600016b1b54b0eeb8" style="width:95%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7f7600016b1b54b0eeb8">{"x":{"filter":"top","filterHTML":"<tr>\n  <td><\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"351\" data-max=\"592\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","extensions":["Buttons"],"caption":"<caption><\/caption>","data":[["MAYER EA, 2014, J NEUROSCI","MESSAOUDI M, 2011, BRIT J NUTR"],["<a href=\"https://doi.org/10.1523/JNEUROSCI.3299-14.2014\" alt=\"\">GUT MICROBES AND THE BRAIN: PARADIGM SHIFT IN NEUROSCIENCE<\/a>","<a href=\"https://doi.org/10.1017/S0007114510004319\" alt=\"\">ASSESSMENT OF PSYCHOTROPIC-LIKE PROPERTIES OF A PROBIOTIC FORMULATION (LACTOBACILLUS HELVETICUS R0052 AND BIFIDOBACTERIUM LONGUM R0175) IN RATS AND HUMAN SUBJECTS<\/a>"],[351,592]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>鏂囩珷鏍囬<\/th>\n      <th>琚紩棰戞<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","pageLength":10,"buttons":["pageLength",{"extend":"copy"},{"extend":"excel","filename":"plot/highlycited-vip-table-1","header":true,"title":""}],"columnDefs":[{"width":"80%","targets":1},{"width":"100px","targets":"_all"},{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"lengthMenu":[[10,20,50,100,200,-1],["10","20","50","100","200","All"]],"autoWidth":true,"order":[],"orderClasses":false,"orderCellsTop":true,"rowCallback":"function(row, data) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'font-size':'9pt'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'font-size':'9pt'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'font-size':'9pt'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'font-size':'9pt'});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'font-size':'9pt'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<p class="caption">
+图 4.7: 关键论文的清单
+</p>
+</div>
+<p>通过上面分析，结合关键词的共现网络（图 <a href="highly-cited.html#fig:highlycited-keyword-network">4.8</a>）可见：</p>
+<ul>
+<li>观点一；</li>
+<li>观点二。</li>
+</ul>
+<div class="figure"><span id="fig:highlycited-keyword-network"></span>
+<div id="htmlwidget-6e058720b9f46f4367a8" style="width:672px;height:480px;" class="visNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6e058720b9f46f4367a8">{"x":{"nodes":{"id":["LACTIC-ACID BACTERIA","IRRITABLE-BOWEL-SYNDROME","TROUT ONCORHYNCHUS-MYKISS","BACTERIA","LACTOBACILLUS-PLANTARUM","GROWTH-PERFORMANCE","DOUBLE-BLIND","GUT MICROBIOTA","HEALTH","PROBIOTICS","CHAIN FATTY-ACIDS","FECAL MICROBIOTA","RAINBOW-TROUT","MICROBIOTA","INSULIN-RESISTANCE","OXIDATIVE STRESS","LACTOBACILLUS-ACIDOPHILUS","INTESTINAL MICROBIOTA","INFLAMMATION","DISEASE","IN-VITRO","INTESTINAL","ESCHERICHIA-COLI","FERMENTED MILK","DIVERSITY","INFLAMMATORY-BOWEL-DISEASE","CROHNS-DISEASE","PLACEBO-CONTROLLED TRIAL","ANXIETY-LIKE BEHAVIOR"],"size":[27,24,12,29,21,17,25,29,20,26,24,24,13,28,16,18,17,28,20,17,25,25,23,19,16,18,18,19,16],"label":["LACTIC-ACID BACTERIA","IRRITABLE-BOWEL-SYNDROME","TROUT ONCORHYNCHUS-MYKISS","BACTERIA","LACTOBACILLUS-PLANTARUM","GROWTH-PERFORMANCE","DOUBLE-BLIND","GUT MICROBIOTA","HEALTH","PROBIOTICS","CHAIN FATTY-ACIDS","FECAL MICROBIOTA","RAINBOW-TROUT","MICROBIOTA","INSULIN-RESISTANCE","OXIDATIVE STRESS","LACTOBACILLUS-ACIDOPHILUS","INTESTINAL MICROBIOTA","INFLAMMATION","DISEASE","IN-VITRO","INTESTINAL","ESCHERICHIA-COLI","FERMENTED MILK","DIVERSITY","INFLAMMATORY-BOWEL-DISEASE","CROHNS-DISEASE","PLACEBO-CONTROLLED TRIAL","ANXIETY-LIKE BEHAVIOR"],"value":[4,5,3,1,0,0,6,3,1,2,2,3,2,4,0,0,1,5,0,0,1,1,0,1,1,0,1,1,2],"cluster":[8,12,8,8,1,2,11,3,3,3,12,11,8,12,4,5,8,12,6,7,8,12,9,11,3,10,11,11,12],"color":["#F05F60","#FF7F00","#F05F60","#F05F60","#A6CEE3","#5097C5","#FDA746","#4794A8","#4794A8","#4794A8","#FF7F00","#FDA746","#F05F60","#FF7F00","#A4D58D","#6CBC56","#F05F60","#FF7F00","#579E3F","#D69B85","#F05F60","#FF7F00","#E52923","#FDA746","#4794A8","#F59258","#FDA746","#FDA746","#FF7F00"]},"edges":{"from":["LACTIC-ACID BACTERIA","LACTIC-ACID BACTERIA","LACTIC-ACID BACTERIA","LACTIC-ACID BACTERIA","IRRITABLE-BOWEL-SYNDROME","IRRITABLE-BOWEL-SYNDROME","IRRITABLE-BOWEL-SYNDROME","IRRITABLE-BOWEL-SYNDROME","IRRITABLE-BOWEL-SYNDROME","TROUT ONCORHYNCHUS-MYKISS","TROUT ONCORHYNCHUS-MYKISS","DOUBLE-BLIND","DOUBLE-BLIND","DOUBLE-BLIND","DOUBLE-BLIND","DOUBLE-BLIND","GUT MICROBIOTA","GUT MICROBIOTA","PROBIOTICS","CHAIN FATTY-ACIDS","FECAL MICROBIOTA","FECAL MICROBIOTA","MICROBIOTA","MICROBIOTA","INTESTINAL MICROBIOTA"],"to":["TROUT ONCORHYNCHUS-MYKISS","RAINBOW-TROUT","LACTOBACILLUS-ACIDOPHILUS","IN-VITRO","DOUBLE-BLIND","CHAIN FATTY-ACIDS","MICROBIOTA","INTESTINAL MICROBIOTA","ANXIETY-LIKE BEHAVIOR","BACTERIA","RAINBOW-TROUT","GUT MICROBIOTA","FECAL MICROBIOTA","FERMENTED MILK","CROHNS-DISEASE","PLACEBO-CONTROLLED TRIAL","HEALTH","PROBIOTICS","DIVERSITY","INTESTINAL MICROBIOTA","MICROBIOTA","INTESTINAL MICROBIOTA","INTESTINAL MICROBIOTA","INTESTINAL","ANXIETY-LIKE BEHAVIOR"],"weight":[16,8,9,18,13,9,10,15,14,9,17,9,15,9,8,15,9,10,9,10,8,13,8,20,9],"value":[16,8,9,18,13,9,10,15,14,9,17,9,15,9,8,15,9,10,9,10,8,13,8,20,9]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"layout":{"randomSeed":20200721},"interaction":{"hover":true}},"groups":null,"width":null,"height":null,"idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","datacss":"table.legend_table {\n  font-size: 11px;\n  border-width:1px;\n  border-color:#d3d3d3;\n  border-style:solid;\n}\ntable.legend_table td {\n  border-width:1px;\n  border-color:#d3d3d3;\n  border-style:solid;\n  padding: 2px;\n}\ndiv.table_content {\n  width:80px;\n  text-align:center;\n}\ndiv.table_description {\n  width:100px;\n}\n\n#operation {\n  font-size:28px;\n}\n#network-popUp {\n  display:none;\n  z-index:299;\n  width:250px;\n  height:150px;\n  background-color: #f9f9f9;\n  border-style:solid;\n  border-width:3px;\n  border-color: #5394ed;\n  padding:10px;\n  text-align: center;\n  position:fixed;\n  top:50%;  \n  left:50%;  \n  margin:-100px 0 0 -100px;  \n\n}","tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);","highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+图 4.8: 关键词的共现网络
+</p>
+</div>
+</div>
+<div id="疾病" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> 疾病</h2>
+<p>在图 <a href="highly-cited.html#fig:highlycited-keyword-network">4.8</a> 中，已经可见几个疾病相关的关键词，
+如 IBD，IBS，克罗恩病等。那究竟哪些疾病相关的研究更为充分呢？</p>
+<p><img src="plot/unnamed-chunk-19-1.png" width="672" /></p>
 
+</div>
 </div>
             </section>
 

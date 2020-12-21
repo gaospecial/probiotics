@@ -24,7 +24,7 @@
 <meta name="author" content="高春辉" />
 
 
-<meta name="date" content="2020-12-19" />
+<meta name="date" content="2020-12-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,12 +54,27 @@
 <link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
 <script src="libs/anchor-sections/anchor-sections.js"></script>
 <script src="libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="libs/plotly-binding/plotly.js"></script>
-<script src="libs/typedarray/typedarray.min.js"></script>
+<link href="libs/vis/vis.css" rel="stylesheet" />
+<script src="libs/vis/vis.min.js"></script>
+<script src="libs/visNetwork-binding/visNetwork.js"></script>
+<link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding/datatables.js"></script>
+<link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+<script src="libs/jszip/jszip.min.js"></script>
+<link href="libs/dt-ext-buttons/css/buttons.dataTables.min.css" rel="stylesheet" />
+<script src="libs/dt-ext-buttons/js/dataTables.buttons.min.js"></script>
+<script src="libs/dt-ext-buttons/js/buttons.flash.min.js"></script>
+<script src="libs/dt-ext-buttons/js/buttons.html5.min.js"></script>
+<script src="libs/dt-ext-buttons/js/buttons.colVis.min.js"></script>
+<script src="libs/dt-ext-buttons/js/buttons.print.min.js"></script>
+<link href="libs/nouislider/jquery.nouislider.min.css" rel="stylesheet" />
+<script src="libs/nouislider/jquery.nouislider.min.js"></script>
+<link href="libs/selectize/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="libs/selectize/selectize.min.js"></script>
 <link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk/js/crosstalk.min.js"></script>
-<link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotly-main/plotly-latest.min.js"></script>
 
 
 <style type="text/css">
@@ -170,7 +185,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5" data-path="china-study.html"><a href="china-study.html#期刊-1"><i class="fa fa-check"></i><b>3.5</b> 期刊</a></li>
 <li class="chapter" data-level="3.6" data-path="china-study.html"><a href="china-study.html#知名研究机构-1"><i class="fa fa-check"></i><b>3.6</b> 知名研究机构</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="highly-cited.html"><a href="highly-cited.html"><i class="fa fa-check"></i><b>4</b> 从高被引论文看研究热点</a></li>
+<li class="chapter" data-level="4" data-path="highly-cited.html"><a href="highly-cited.html"><i class="fa fa-check"></i><b>4</b> 从高被引论文看研究热点</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="highly-cited.html"><a href="highly-cited.html#高引论文四维概览"><i class="fa fa-check"></i><b>4.1</b> 高引论文四维概览</a></li>
+<li class="chapter" data-level="4.2" data-path="highly-cited.html"><a href="highly-cited.html#大佬"><i class="fa fa-check"></i><b>4.2</b> 大佬</a></li>
+<li class="chapter" data-level="4.3" data-path="highly-cited.html"><a href="highly-cited.html#力量"><i class="fa fa-check"></i><b>4.3</b> 力量</a></li>
+<li class="chapter" data-level="4.4" data-path="highly-cited.html"><a href="highly-cited.html#研究脉络"><i class="fa fa-check"></i><b>4.4</b> 研究脉络</a></li>
+<li class="chapter" data-level="4.5" data-path="highly-cited.html"><a href="highly-cited.html#疾病"><i class="fa fa-check"></i><b>4.5</b> 疾病</a></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="china-detailed.html"><a href="china-detailed.html"><i class="fa fa-check"></i><b>5</b> 深度剖析中国的益生菌研究</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>参考文献</a></li>
 <li class="divider"></li>
@@ -202,10 +224,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 但是一直不愠不火，而到了 2000 年前后，事情开始起了一些变化。</p>
 </blockquote>
 <div class="figure"><span id="fig:global-growth-by-year"></span>
-<div id="htmlwidget-3bff56026978b4c7ff4c" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3bff56026978b4c7ff4c">{"x":{"data":[{"x":[2020,2019,2018,2017,2016,2015,2014,2013,2012,2011,2010,2009,2008,2007,2006,2005,2004,2003,2002,2001,2000,1999,1998,1997,1996,1995,1994,1993,1992,1991,1990,1989,1988,1987,1985,1984,1983,1979,1978,1977,1976,1975,1974,1973,1972,1970,1966,1965,1935],"y":[4274,4261,3421,3007,2574,2373,2201,1983,1954,1682,1607,1351,1237,1139,905,808,690,494,492,359,257,220,182,95,61,43,32,36,20,25,10,7,10,5,2,1,1,1,3,2,1,3,2,1,2,1,1,2,1],"text":["Group: 2020<br />Record: 4274","Group: 2019<br />Record: 4261","Group: 2018<br />Record: 3421","Group: 2017<br />Record: 3007","Group: 2016<br />Record: 2574","Group: 2015<br />Record: 2373","Group: 2014<br />Record: 2201","Group: 2013<br />Record: 1983","Group: 2012<br />Record: 1954","Group: 2011<br />Record: 1682","Group: 2010<br />Record: 1607","Group: 2009<br />Record: 1351","Group: 2008<br />Record: 1237","Group: 2007<br />Record: 1139","Group: 2006<br />Record:  905","Group: 2005<br />Record:  808","Group: 2004<br />Record:  690","Group: 2003<br />Record:  494","Group: 2002<br />Record:  492","Group: 2001<br />Record:  359","Group: 2000<br />Record:  257","Group: 1999<br />Record:  220","Group: 1998<br />Record:  182","Group: 1997<br />Record:   95","Group: 1996<br />Record:   61","Group: 1995<br />Record:   43","Group: 1994<br />Record:   32","Group: 1993<br />Record:   36","Group: 1992<br />Record:   20","Group: 1991<br />Record:   25","Group: 1990<br />Record:   10","Group: 1989<br />Record:    7","Group: 1988<br />Record:   10","Group: 1987<br />Record:    5","Group: 1985<br />Record:    2","Group: 1984<br />Record:    1","Group: 1983<br />Record:    1","Group: 1979<br />Record:    1","Group: 1978<br />Record:    3","Group: 1977<br />Record:    2","Group: 1976<br />Record:    1","Group: 1975<br />Record:    3","Group: 1974<br />Record:    2","Group: 1973<br />Record:    1","Group: 1972<br />Record:    2","Group: 1970<br />Record:    1","Group: 1966<br />Record:    1","Group: 1965<br />Record:    2","Group: 1935<br />Record:    1"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,139,1)","opacity":0.5,"size":11.3385826771654,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1935,1965,1966,1970,1972,1973,1974,1975,1976,1977,1978,1979,1983,1984,1985,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2020,2020,2019,2018,2017,2016,2015,2014,2013,2012,2011,2010,2009,2008,2007,2006,2005,2004,2003,2002,2001,2000,1999,1998,1997,1996,1995,1994,1993,1992,1991,1990,1989,1988,1987,1985,1984,1983,1979,1978,1977,1976,1975,1974,1973,1972,1970,1966,1965,1935,1935],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4274,4261,3421,3007,2574,2373,2201,1983,1954,1682,1607,1351,1237,1139,905,808,690,494,492,359,257,220,182,95,61,43,32,36,20,25,10,7,10,5,2,1,1,1,3,2,1,3,2,1,2,1,1,2,1,0],"text":["Group: 1935<br />Record:    1","Group: 1965<br />Record:    2","Group: 1966<br />Record:    1","Group: 1970<br />Record:    1","Group: 1972<br />Record:    2","Group: 1973<br />Record:    1","Group: 1974<br />Record:    2","Group: 1975<br />Record:    3","Group: 1976<br />Record:    1","Group: 1977<br />Record:    2","Group: 1978<br />Record:    3","Group: 1979<br />Record:    1","Group: 1983<br />Record:    1","Group: 1984<br />Record:    1","Group: 1985<br />Record:    2","Group: 1987<br />Record:    5","Group: 1988<br />Record:   10","Group: 1989<br />Record:    7","Group: 1990<br />Record:   10","Group: 1991<br />Record:   25","Group: 1992<br />Record:   20","Group: 1993<br />Record:   36","Group: 1994<br />Record:   32","Group: 1995<br />Record:   43","Group: 1996<br />Record:   61","Group: 1997<br />Record:   95","Group: 1998<br />Record:  182","Group: 1999<br />Record:  220","Group: 2000<br />Record:  257","Group: 2001<br />Record:  359","Group: 2002<br />Record:  492","Group: 2003<br />Record:  494","Group: 2004<br />Record:  690","Group: 2005<br />Record:  808","Group: 2006<br />Record:  905","Group: 2007<br />Record: 1139","Group: 2008<br />Record: 1237","Group: 2009<br />Record: 1351","Group: 2010<br />Record: 1607","Group: 2011<br />Record: 1682","Group: 2012<br />Record: 1954","Group: 2013<br />Record: 1983","Group: 2014<br />Record: 2201","Group: 2015<br />Record: 2373","Group: 2016<br />Record: 2574","Group: 2017<br />Record: 3007","Group: 2018<br />Record: 3421","Group: 2019<br />Record: 4261","Group: 2020<br />Record: 4274","Group: 2020<br />Record: 4274","Group: 2020<br />Record: 4274","Group: 2019<br />Record: 4261","Group: 2018<br />Record: 3421","Group: 2017<br />Record: 3007","Group: 2016<br />Record: 2574","Group: 2015<br />Record: 2373","Group: 2014<br />Record: 2201","Group: 2013<br />Record: 1983","Group: 2012<br />Record: 1954","Group: 2011<br />Record: 1682","Group: 2010<br />Record: 1607","Group: 2009<br />Record: 1351","Group: 2008<br />Record: 1237","Group: 2007<br />Record: 1139","Group: 2006<br />Record:  905","Group: 2005<br />Record:  808","Group: 2004<br />Record:  690","Group: 2003<br />Record:  494","Group: 2002<br />Record:  492","Group: 2001<br />Record:  359","Group: 2000<br />Record:  257","Group: 1999<br />Record:  220","Group: 1998<br />Record:  182","Group: 1997<br />Record:   95","Group: 1996<br />Record:   61","Group: 1995<br />Record:   43","Group: 1994<br />Record:   32","Group: 1993<br />Record:   36","Group: 1992<br />Record:   20","Group: 1991<br />Record:   25","Group: 1990<br />Record:   10","Group: 1989<br />Record:    7","Group: 1988<br />Record:   10","Group: 1987<br />Record:    5","Group: 1985<br />Record:    2","Group: 1984<br />Record:    1","Group: 1983<br />Record:    1","Group: 1979<br />Record:    1","Group: 1978<br />Record:    3","Group: 1977<br />Record:    2","Group: 1976<br />Record:    1","Group: 1975<br />Record:    3","Group: 1974<br />Record:    2","Group: 1973<br />Record:    1","Group: 1972<br />Record:    2","Group: 1970<br />Record:    1","Group: 1966<br />Record:    1","Group: 1965<br />Record:    2","Group: 1935<br />Record:    1","Group: 1935<br />Record:    1"],"type":"scatter","mode":"lines","line":{"width":1.88976377952756,"color":"transparent","dash":"solid"},"fill":"toself","fillcolor":"rgba(0,0,255,0.5)","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1935,1965,1966,1970,1972,1973,1974,1975,1976,1977,1978,1979,1983,1984,1985,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020],"y":[1,2,1,1,2,1,2,3,1,2,3,1,1,1,2,5,10,7,10,25,20,36,32,43,61,95,182,220,257,359,492,494,690,808,905,1139,1237,1351,1607,1682,1954,1983,2201,2373,2574,3007,3421,4261,4274],"text":["Group: 1935<br />Record:    1","Group: 1965<br />Record:    2","Group: 1966<br />Record:    1","Group: 1970<br />Record:    1","Group: 1972<br />Record:    2","Group: 1973<br />Record:    1","Group: 1974<br />Record:    2","Group: 1975<br />Record:    3","Group: 1976<br />Record:    1","Group: 1977<br />Record:    2","Group: 1978<br />Record:    3","Group: 1979<br />Record:    1","Group: 1983<br />Record:    1","Group: 1984<br />Record:    1","Group: 1985<br />Record:    2","Group: 1987<br />Record:    5","Group: 1988<br />Record:   10","Group: 1989<br />Record:    7","Group: 1990<br />Record:   10","Group: 1991<br />Record:   25","Group: 1992<br />Record:   20","Group: 1993<br />Record:   36","Group: 1994<br />Record:   32","Group: 1995<br />Record:   43","Group: 1996<br />Record:   61","Group: 1997<br />Record:   95","Group: 1998<br />Record:  182","Group: 1999<br />Record:  220","Group: 2000<br />Record:  257","Group: 2001<br />Record:  359","Group: 2002<br />Record:  492","Group: 2003<br />Record:  494","Group: 2004<br />Record:  690","Group: 2005<br />Record:  808","Group: 2006<br />Record:  905","Group: 2007<br />Record: 1139","Group: 2008<br />Record: 1237","Group: 2009<br />Record: 1351","Group: 2010<br />Record: 1607","Group: 2011<br />Record: 1682","Group: 2012<br />Record: 1954","Group: 2013<br />Record: 1983","Group: 2014<br />Record: 2201","Group: 2015<br />Record: 2373","Group: 2016<br />Record: 2574","Group: 2017<br />Record: 3007","Group: 2018<br />Record: 3421","Group: 2019<br />Record: 4261","Group: 2020<br />Record: 4274"],"type":"scatter","mode":"lines","line":{"width":7.55905511811024,"color":"rgba(0,0,139,0.5)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.7625570776256,"r":7.30593607305936,"b":25.5707762557078,"l":48.9497716894977},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Publication.Years","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1988.5,2021.5],"tickmode":"array","ticktext":["1990","2000","2010","2020"],"tickvals":[1990,2000,2010,2020],"categoryorder":"array","categoryarray":["1990","2000","2010","2020"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f","fixedrange":true},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-213.7,4487.7],"tickmode":"array","ticktext":["0","1000","2000","3000","4000"],"tickvals":[0,1000,2000,3000,4000],"categoryorder":"array","categoryarray":["0","1000","2000","3000","4000"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"Record","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f","fixedrange":true},"shapes":[{"type":"rect","fillcolor":"transparent","line":{"color":"rgba(51,51,51,1)","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false,"displaylogo":false,"modeBarButtonsToRemove":["sendDataToCloud","pan2d","select2d","lasso2d","toggleSpikelines","hoverClosestCartesian","hoverCompareCartesian"]},"source":"A","attrs":{"3ad84bce34de":{"x":{},"y":{},"alpha":{},"type":"scatter"},"3ad819554da7":{"x":{},"y":{},"alpha":{}},"3ad85e4a130d":{"x":{},"y":{},"alpha":{}}},"cur_data":"3ad84bce34de","visdat":{"3ad84bce34de":["function (y) ","x"],"3ad819554da7":["function (y) ","x"],"3ad85e4a130d":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<img src="plot/global-growth-by-year-1.png" alt="全球益生菌研究的增长情况 [ppt](plot/global-growth-by-year-1.pptx), [pdf](plot/global-growth-by-year-1.pdf)" width="672" />
 <p class="caption">
-图 2.1: 全球益生菌研究的增长情况 <a href="plot/global-growth-by-year-1.pptx">ppt</a>
+图 2.1: 全球益生菌研究的增长情况 <a href="plot/global-growth-by-year-1.pptx">ppt</a>, <a href="plot/global-growth-by-year-1.pdf">pdf</a>
 </p>
 </div>
 <p>图 <a href="intro.html#fig:global-growth-by-year">2.1</a> 展示了全球益生菌研究论文发表数量的增长情况。
@@ -219,9 +240,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 或许假以时日，中国制造的益生菌产品也可以像其它中国制造一样畅销全球。</p>
 </blockquote>
 <div class="figure"><span id="fig:global-output-by-country"></span>
-<img src="plot/global-output-by-country-1.png" alt="益生菌研究成果最突出的国家 [ppt](plot/global-output-by-country-1.pptx)" width="672" />
+<img src="plot/global-output-by-country-1.png" alt="益生菌研究成果最突出的国家 [ppt](plot/global-output-by-country-1.pptx), [pdf](plot/global-output-by-country-1.pdf)" width="672" />
 <p class="caption">
-图 2.2: 益生菌研究成果最突出的国家 <a href="plot/global-output-by-country-1.pptx">ppt</a>
+图 2.2: 益生菌研究成果最突出的国家 <a href="plot/global-output-by-country-1.pptx">ppt</a>, <a href="plot/global-output-by-country-1.pdf">pdf</a>
 </p>
 </div>
 <p>图 <a href="intro.html#fig:global-output-by-country">2.2</a> 展示了全部论文的来源国。
@@ -234,9 +255,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>你以为益生菌只能用来调理肠胃？应该说远不止于此，它的研究和应用领域实际上非常广泛。</p>
 </blockquote>
 <div class="figure"><span id="fig:global-category"></span>
-<img src="plot/global-category-1.png" alt="益生菌研究横跨生物、食品、农业等多个学科 [ppt](plot/global-category-1.pptx)" width="672" />
+<img src="plot/global-category-1.png" alt="益生菌研究横跨生物、食品、农业等多个学科 [ppt](plot/global-category-1.pptx), [pdf](plot/global-category-1.pdf)" width="672" />
 <p class="caption">
-图 2.3: 益生菌研究横跨生物、食品、农业等多个学科 <a href="plot/global-category-1.pptx">ppt</a>
+图 2.3: 益生菌研究横跨生物、食品、农业等多个学科 <a href="plot/global-category-1.pptx">ppt</a>, <a href="plot/global-category-1.pdf">pdf</a>
 </p>
 </div>
 <p>图 <a href="intro.html#fig:global-category">2.3</a> 展示了益生菌研究涉及的广泛研究领域。
@@ -252,9 +273,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>有人研究就有人总结，你觉得综述文章所占的比例可以反映观点的多样化程度吗？</p>
 </blockquote>
 <div class="figure"><span id="fig:global-document-type"></span>
-<img src="plot/global-document-type-1.png" alt="研究类型 [ppt](plot/global-document-type-1.pptx)" width="672" />
+<img src="plot/global-document-type-1.png" alt="研究类型 [ppt](plot/global-document-type-1.pptx), [pdf](plot/global-document-type-1.pdf)" width="672" />
 <p class="caption">
-图 2.4: 研究类型 <a href="plot/global-document-type-1.pptx">ppt</a>
+图 2.4: 研究类型 <a href="plot/global-document-type-1.pptx">ppt</a>, <a href="plot/global-document-type-1.pdf">pdf</a>
 </p>
 </div>
 <p>图 <a href="intro.html#fig:global-document-type">2.4</a> 展示了论文的类型。
@@ -266,9 +287,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>如果你是现在正在开展益生菌相关研究的研究生，你会把自己的论文发表在那本杂志上呢？</p>
 </blockquote>
 <div class="figure"><span id="fig:global-source"></span>
-<img src="plot/global-source-1.png" alt="发文最多的期刊 [ppt](plot/global-source-1.pptx)" width="672" />
+<img src="plot/global-source-1.png" alt="发文最多的期刊 [ppt](plot/global-source-1.pptx), [pdf](plot/global-source-1.pdf)" width="672" />
 <p class="caption">
-图 2.5: 发文最多的期刊 <a href="plot/global-source-1.pptx">ppt</a>
+图 2.5: 发文最多的期刊 <a href="plot/global-source-1.pptx">ppt</a>, <a href="plot/global-source-1.pdf">pdf</a>
 </p>
 </div>
 <p>图 <a href="intro.html#fig:global-source">2.5</a> 展示了发文量最高的几大期刊。
@@ -281,18 +302,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>一个老牌的知名机构，不仅站在研究的前沿，还可能是当前如火如荼益生菌新产业的发源地。</p>
 </blockquote>
 <div class="figure"><span id="fig:global-organization"></span>
-<img src="plot/global-organization-1.png" alt="全球最知名的研究机构 [ppt](plot/global-organization-1.pptx)" width="672" />
+<img src="plot/global-organization-1.png" alt="全球最知名的研究机构 [ppt](plot/global-organization-1.pptx), [pdf](plot/global-organization-1.pdf)" width="672" />
 <p class="caption">
-图 2.6: 全球最知名的研究机构 <a href="plot/global-organization-1.pptx">ppt</a>
+图 2.6: 全球最知名的研究机构 <a href="plot/global-organization-1.pptx">ppt</a>, <a href="plot/global-organization-1.pdf">pdf</a>
 </p>
 </div>
 <p>图 <a href="intro.html#fig:global-organization">2.6</a> 列出了全球范围内按照论文发表数量统计的最突出的研究机构。
 排名前三的分别是：西班牙高等科学研究理事会，爱尔兰科克大学和法国农业科学院。
 这其中仅有一家来自于中国，那就是江南大学，排在第 24 位。</p>
 <div class="figure"><span id="fig:global-organization-country"></span>
-<img src="plot/global-organization-country-1.png" alt="最顶尖机构的地理位置 [ppt](plot/global-organization-country-1.pptx)" width="672" />
+<img src="plot/global-organization-country-1.png" alt="最顶尖机构的地理位置 [ppt](plot/global-organization-country-1.pptx), [pdf](plot/global-organization-country-1.pdf)" width="672" />
 <p class="caption">
-图 2.7: 最顶尖机构的地理位置 <a href="plot/global-organization-country-1.pptx">ppt</a>
+图 2.7: 最顶尖机构的地理位置 <a href="plot/global-organization-country-1.pptx">ppt</a>, <a href="plot/global-organization-country-1.pdf">pdf</a>
 </p>
 </div>
 <p>图 <a href="intro.html#fig:global-organization-country">2.7</a> 展示了这些知名机构的地理位置，
