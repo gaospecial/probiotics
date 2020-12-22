@@ -113,7 +113,7 @@ article_by_disease <- lapply(seq_along(keyword), function(i){
   pattern <- keyword[[i]]$pattern
   M %>% 
     mutate(content = paste(TI,AB,DE)) %>% 
-    filter(str_detect(content, regex(pattern, ingore_case = TRUE, fixed = TRUE)))
+    filter(str_detect(content, fixed(pattern, ignore_case = TRUE)))
 })
 disease_name <- sapply(seq_along(keyword), function(i) names(keyword[i]))
 disease_name_cn <- sapply(seq_along(keyword), function(i) keyword[[i]]$name)
