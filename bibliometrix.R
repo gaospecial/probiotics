@@ -102,8 +102,10 @@ DT_output <- function(M, caption = "",
                 filter = "top",
                 width = "95%",
                 caption = caption,
-                extensions = c("Buttons"),
+                extensions = c("Buttons","FixedColumns"),
                 options=list(dom = 'Bfrtip',
+                             scrollX = TRUE,
+                             fixedColumns = TRUE,
                              pageLength = 10,
                              buttons=list(
                                'pageLength',
@@ -115,7 +117,7 @@ DT_output <- function(M, caption = "",
                              ),
                              columnDefs=list(
                                list(width="80%",targets=1),
-                               list(width="100px",targets="_all")
+                               list(width="10%",targets="_all")
                              ),
                              lengthMenu=list(c(10,20,50,100,200,-1),
                                              c("10","20","50","100","200","All")),
