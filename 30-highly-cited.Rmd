@@ -113,17 +113,19 @@ article_by_disease <- lapply(seq_along(keyword), function(i){
   pattern <- keyword[[i]]$pattern
   M %>% 
     mutate(content = paste(TI,AB,DE)) %>% 
-    filter(str_detect(content, fixed(pattern, ignore_case = TRUE)))
+    filter(str_detect(content, regex(pattern, ignore_case = TRUE)))
 })
 disease_name <- sapply(seq_along(keyword), function(i) names(keyword[i]))
 disease_name_cn <- sapply(seq_along(keyword), function(i) keyword[[i]]$name)
 ```
 
-```{r}
+```{r highlycited-disease-count, fig.cap=caption_download("高引论文论文涉及的益生菌适应症")}
 count <- tibble(disease = disease_name_cn,
                 n = sapply(article_by_disease, nrow)) %>%
   arrange(desc(n))
 hbarplot(count) +
   labs(x="",y="",title = "高引论文涉及的益生菌适应症")
 ```
-
+由图 \@ref(fig:highlycited-disease-count) 可知，
+在全球范围内，高引论文涉及最多的适应症依次是
+`r combine_words(count$disease[1:5], sep = "，", and ="和")`等。

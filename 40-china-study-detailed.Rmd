@@ -18,7 +18,7 @@ caption <- paste0( "国内",
                    "（A）发表文章最多的10位科学家；",
                    "（B）发表文章最多的10个大学；",
                    "（C）发表文章最多的10本杂志;",  
-                   "（D）期刊影响因子分布图。",
+                   "（D）期刊影响因子分布图。"
 )
 ```
 
@@ -52,7 +52,7 @@ author_network(M, nNode = 10, delete_isolate = FALSE, edge_weight_cutoff = 10)
 中国的研究当然也不是闭门造车搞出来的，事实上与美国、加拿大、英国等
 国家的交流也十分频繁（图 \@ref(fig:china-detailed-country-net)），
 且与韩国、印度、巴基斯坦等国之间也有合作。
-与欧洲益生菌大本营之间的联系反倒还少一些，
+与欧洲益生菌大本营之间的联系稍显不足，
 仅有英国、法国和荷兰挤进了前十。
 
 ```{r china-detailed-country-net, fig.cap="高引论文的国际合作网络"}
@@ -106,8 +106,7 @@ keyword_network(M, nNode = 30, edge_weight_cutoff = 30, delete_isolate=FALSE)
 
 ## 疾病
 
-在图 \@ref(fig:china-detailed-keyword-network) 中，已经可见几个疾病相关的关键词，
-如 IBD，IBS，克罗恩病等。那究竟哪些疾病相关的研究更为充分呢？
+中国的科学家究竟对哪些疾病相关的研究更为充分呢？
 
 ```{r}
 keyword <- yaml::read_yaml("disease_keywords.yaml")
@@ -115,16 +114,19 @@ article_by_disease <- lapply(seq_along(keyword), function(i){
   pattern <- keyword[[i]]$pattern
   M %>% 
     mutate(content = paste(TI,AB,DE)) %>% 
-    filter(str_detect(content, fixed(pattern, ignore_case = TRUE)))
+    filter(str_detect(content, regex(pattern, ignore_case = TRUE)))
 })
 disease_name <- sapply(seq_along(keyword), function(i) names(keyword[i]))
 disease_name_cn <- sapply(seq_along(keyword), function(i) keyword[[i]]$name)
 ```
 
-```{r}
+```{r china-detailed-disease-count, fig.cap=caption_download("国内研究论文涉及的益生菌适应症")}
 count <- tibble(disease = disease_name_cn,
                 n = sapply(article_by_disease, nrow)) %>%
   arrange(desc(n))
 hbarplot(count) +
   labs(x="",y="",title = "国内研究论文涉及的益生菌适应症")
 ```
+由图 \@ref(fig:china-detailed-disease-count) 可知，
+国内研究论文涉及最多的适应症依次是
+`r combine_words(count$disease[1:5], sep = "，", and ="和")`等。
