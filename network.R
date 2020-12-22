@@ -46,8 +46,9 @@ simplified_network <- function(M, from = NULL, to = NULL, nNode = 30,
   require(igraph)
   require(RColorBrewer)
   require(visNetwork)
-  PY_from <- min(M$PY)
-  PY_to   <- max(M$PY)
+  M$PY <- as.numeric(M$PY)
+  PY_from <- min(M$PY, na.rm = TRUE)
+  PY_to   <- max(M$PY, na.rm = TRUE)
   if (is.null(from)) from <- PY_from
   if (is.null(to)) to <- PY_to
   if (from > to) stop(paste0("from is bigger than to."))
