@@ -1,5 +1,3 @@
-fig:wos-search-result
-fig:ltp-tree
 fig:species-workflow
 fig:global-growth-by-year
 fig:global-output-by-country
@@ -58,7 +56,7 @@ highly-cited
 研究脉络
 疾病
 china-detailed
-高引论文四维概览-1
+国内研究论文四维概览
 大佬-1
 力量-1
 研究脉络-1
