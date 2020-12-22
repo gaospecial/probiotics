@@ -1,5 +1,6 @@
 fig:wos-search-result
 fig:ltp-tree
+fig:species-workflow
 fig:global-growth-by-year
 fig:global-output-by-country
 fig:global-category
@@ -22,9 +23,20 @@ fig:highlycited-university-net
 fig:highlycited-histnet
 fig:highlycited-vip-table
 fig:highlycited-keyword-network
+fig:highlycited-disease-count
+fig:china-detailed-4d-barplot
+fig:china-detailed-authorProdOverTime
+fig:china-detailed-author-net
+fig:china-detailed-country-net
+fig:china-detailed-university-net
+fig:china-detailed-histnet
+fig:china-detailed-vip-table
+fig:china-detailed-keyword-network
+fig:china-detailed-disease-count
 raw-data
 文献数据的预处理
 物种信息的处理
+审查菌种
 intro
 益生菌相关研究现正处于爆炸式增长阶段
 中国也有非常多的益生菌研究成果
@@ -46,3 +58,8 @@ highly-cited
 研究脉络
 疾病
 china-detailed
+高引论文四维概览-1
+大佬-1
+力量-1
+研究脉络-1
+疾病-1
