@@ -1,3 +1,4 @@
+fig:wos-search-result
 fig:species-workflow
 fig:global-growth-by-year
 fig:global-output-by-country
