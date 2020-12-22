@@ -1,1 +1,130 @@
 # 深度剖析中国的益生菌研究 {#china-detailed}
+
+为了全方位的解读本土的益生菌研究，我们将在这一章节对中国科学家（参与）发表的
+益生菌相关研究的全部论文进行更进一步的解读。
+
+
+```{r}
+M <- readRDS("data/china_study.RDS")
+```
+
+## 高引论文四维概览
+
+首先从四个维度来看一下高引论文的概况。
+
+```{r}
+caption <- paste0( "国内",
+                   "益生菌研究的简要信息。",
+                   "（A）发表文章最多的10位科学家；",
+                   "（B）发表文章最多的10个大学；",
+                   "（C）发表文章最多的10本杂志;",  
+                   "（D）期刊影响因子分布图。",
+)
+```
+
+```{r china-detailed-4d-barplot, fig.cap=caption_download(caption)}
+four_dimension_barplot(M, tags = c("AU","AU_UN_NR","J9","group"))
+```
+图 \@ref(fig:china-detailed-4d-barplot) 展示了中国论文 4 个方面的简略信息。
+从中我们可以看到杰出的科学家、代表性的科研机构（大学和研究所[^only-univ]）、期刊及影响因子的分布图等信息。
+
+[^only-univ]: 由于统计口径变化，中科院等机构整体上榜的情形被逆转。
+
+## 大佬
+
+图 \@ref(fig:china-detailed-authorProdOverTime) 展示了最突出的十位科学家。
+
+```{r china-detailed-authorProdOverTime, fig.cap=caption_download("十大科学家的发文量")}
+authorProdOverTime2(M) +
+  labs(y="")
+```
+由图 \@ref(fig:china-detailed-author-net) 可知，
+这十位大佬中的六位之间存在十分强烈的联系，他们是由陈卫院士（Chen, Wei）领衔的
+江南大学团队。
+
+```{r china-detailed-author-net, fig.cap="十大科学家的合作网络"}
+author_network(M, nNode = 10, delete_isolate = FALSE, edge_weight_cutoff = 10)
+```
+
+## 力量
+
+
+中国的研究当然也不是闭门造车搞出来的，事实上与美国、加拿大、英国等
+国家的交流也十分频繁（图 \@ref(fig:china-detailed-country-net)），
+且与韩国、印度、巴基斯坦等国之间也有合作。
+与欧洲益生菌大本营之间的联系反倒还少一些，
+仅有英国、法国和荷兰挤进了前十。
+
+```{r china-detailed-country-net, fig.cap="高引论文的国际合作网络"}
+country_network(M,nNode = 11,delete_isolate=FALSE,edge_weight_cutoff = 8)
+```
+
+图 \@ref(fig:china-detailed-university-net) 展示了研究机构间的合作关系。
+两个子网络，分别是大陆一块，台湾一块。
+这说明两岸之间在益生菌研究上面的交流仍然存在巨大的鸿沟。
+
+在大陆方面，江南大学、内蒙古农业大学和上海交通大学形成了稳固的铁三角，
+且内蒙古农业大学与另外两所大学间的联系非常紧密。
+其在网络中的地位凸显出在益生菌研究方面的深厚底蕴。
+
+```{r china-detailed-university-net, fig.cap="十大机构合作网络"}
+university_network(M,nNode = 10, delete_isolate = FALSE, edge_weight_cutoff = 2)
+```
+
+
+
+## 研究脉络
+
+> 举一纲而万目张，解一卷而众篇明。于力则鲜，于思则寡，其诸君子，亦有乐于是与。
+> —— 东汉郑玄
+
+```{r china-detailed-histnet, fig.cap=caption_download("国内益生菌研究的历史脉络")}
+research_article <- M %>% filter(DT == "ARTICLE")
+histNet <- histNetwork(research_article, verbose = FALSE)
+graph <- histPlot(histNet, verbose = FALSE)
+graph$g
+```
+
+图 \@ref(fig:china-detailed-histnet) 是益生菌关键研究的印证关系，借此可以梳理研究的历史脉络。
+相关论文的详细信息列在图 \@ref(fig:china-detailed-vip-table) 中。
+
+***Note：需要阅读上述文献，才能提炼出研究脉络的种种。***
+
+```{r china-detailed-vip-table, fig.cap="关键论文的清单"}
+vip <- extract_from_hist_graph(M, graph$net)
+DT_output(vip)
+```
+
+通过上面分析，结合关键词的共现网络（图 \@ref(fig:china-detailed-keyword-network)）可见：
+
+- 观点一；
+- 观点二。
+
+```{r china-detailed-keyword-network, fig.cap="关键词的共现网络"}
+keyword_network(M, nNode = 30, edge_weight_cutoff = 30, delete_isolate=FALSE)
+```
+
+## 疾病
+
+在图 \@ref(fig:china-detailed-keyword-network) 中，已经可见几个疾病相关的关键词，
+如 IBD，IBS，克罗恩病等。那究竟哪些疾病相关的研究更为充分呢？
+
+```{r}
+keyword <- yaml::read_yaml("disease_keywords.yaml")
+article_by_disease <- lapply(seq_along(keyword), function(i){
+  pattern <- keyword[[i]]$pattern
+  M %>% 
+    mutate(content = paste(TI,AB,DE)) %>% 
+    filter(str_detect(content, fixed(pattern, ignore_case = TRUE)))
+})
+disease_name <- sapply(seq_along(keyword), function(i) names(keyword[i]))
+disease_name_cn <- sapply(seq_along(keyword), function(i) keyword[[i]]$name)
+```
+
+```{r}
+count <- tibble(disease = disease_name_cn,
+                n = sapply(article_by_disease, nrow)) %>%
+  arrange(desc(n))
+hbarplot(count) +
+  labs(x="",y="",title = "国内研究论文涉及的益生菌适应症")
+```
