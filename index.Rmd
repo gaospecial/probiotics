@@ -26,12 +26,13 @@ knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE,
                       fig.path = "plot/",
                       dev = c("png","pdf"),
-                      cache = TRUE)
+                      cache = FALSE,
+                      out.width = "100%")
 
 # 填上你需要用到的包，如 c('ggplot2', 'dplyr')
 lapply(c("dplyr","ggplot2","tidyr","visNetwork","plotly",
          "bibliometrix","ggVennDiagram",
-         "mrgut"), function(pkg) {
+         "tibble"), function(pkg) {
   if (system.file(package = pkg) == '') install.packages(pkg)
 })
 
@@ -52,6 +53,11 @@ library(ggraph)
 library(tidygraph)
 library(treemap)
 library(stringr)
+library(cowplot)
+library(ggVennDiagram)
+library(ggwordcloud)
+library(tidyr)
+
 theme_set(theme_bw())
 source("./function.R")
 ```
@@ -64,7 +70,7 @@ source("./function.R")
 关于数据源的一些信息，可以参见第 \@ref(raw-data) 章。
 这本书是这样的，第 \@ref(intro) 章介绍了全球范围内相关研究的概括，
 第 \@ref(china-study) 章则介绍了中国本土益生菌研究的概括，
-第 \@ref(highly-cited) 章则基于高被引论文，剖析了益生菌研究的热点，
+第 \@ref(highly-cited) - \@ref(highly-cited-species) 章则基于高被引论文，剖析了益生菌研究的热点，
 第 \@ref(china-detailed) 章则更完整的展示了中国本土益生菌研究的各个方面。
 
 

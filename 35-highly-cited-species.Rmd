@@ -1,0 +1,60 @@
+# 高被引研究关注最多的益生菌有哪些？ {#highly-cited-species}
+
+```{r}
+M <- readRDS("data/highly_cited.RDS")
+species_found <- readRDS("data/species-found.Rds")
+species_pattern <- lapply(names(species_found), function(x){
+  regex(pattern = paste0("\\b", x, "\\b"),
+        ignore_case = TRUE)
+})
+names(species_pattern) <- names(species_found)
+
+M$ID <- tag_by_regex(M$AB,              # PS = probiotic species
+                     pattern = species_pattern,
+                     pattern.names = str_to_sentence(names(species_pattern)))  
+
+```
+
+## 益生菌联用
+
+图 \@ref(fig:highly-cited-ps-network) 展示了高引论文中益生菌间的共现网络，
+这个共现网络可以体现益生菌的联用。
+图中可见，嗜酸乳杆菌（*Lactobacillus acidophilus*）和
+干酪乳杆菌（*Lactobacillus casei*）、两歧双歧杆菌（*Bifidobacterium bifidum*）
+之间的联系最为紧密；
+此外，长双歧杆菌（*Bifidobacterium longum*）与
+瑞士乳杆菌（*Lactobacillus helveticus*）间也是关系密切。
+在图中，我们也可以看到一些病原菌，如肠炎沙门氏菌（*Salmonella enterica*）、
+单核细胞增多性李斯特氏菌（*Listeria monocytogenes*）、
+无乳链球菌（*Streptococcus agalactiae*）等，这些致病菌出现在益生菌的网络中，
+说明它们应当是是益生菌疗法所针对的主要病原菌对象。
+
+```{r highly-cited-ps-network, fig.cap="菌种共现网络"}
+keyword_network(M, field = "ID", edge_weight_cutoff = 2)
+```
+
+## 益生菌的热度
+
+> 年年岁岁花相似，岁岁年年人不同。
+
+```{r probiotic-year-by-year, fig.cap=caption_download("各个益生菌在不同年间的研究热度")}
+# 益生菌的年份研究
+probiotic_year_by_year <- M %>% select(PY, ID) %>%
+  separate_rows(ID, sep = ";") %>%
+  filter(ID != "") %>%
+  mutate(ID = shrink_lvl(ID, keep = 30)) %>%
+  group_by(PY,ID) %>%
+  summarise(count = n())
+
+ggplot(probiotic_year_by_year, aes(factor(PY),fct_reorder(ID,count),size=count)) +
+  geom_point(alpha = 1/2) +
+  scale_size(range = c(1,10)) +
+  scale_y_discrete(expand = expansion(mult = 0.05)) +
+  theme(axis.text.y = element_text(face = "italic"),
+        axis.title = element_blank())
+```
+图 \@ref(fig:probiotic-year-by-year) 展示了最常见的 30 个物种在不同年间的研究热度。
+可以看到，植物乳杆菌（*Lacotobacillus plantarum*）在 2011 - 2013 年间备受关注；
+而像噬黏蛋白阿克曼氏菌（*Akkermansia muciniphila*）这样的新兴益生菌
+在 2018 年大放光彩之后，又陷入了沉寂之中。
+
