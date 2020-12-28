@@ -1,10 +1,5 @@
 # 原始数据处理 {#raw-data}
 
-```{r}
-echo <- knitr::opts_chunk$get("echo")
-if (!isTRUE(echo)) knitr::opts_chunk$set(echo = TRUE)
-```
-
 
 ## 文献数据的预处理
 
@@ -12,7 +7,7 @@ if (!isTRUE(echo)) knitr::opts_chunk$set(echo = TRUE)
 一共可以得到 37967 条结果，含 ESI 高被引论文 577 篇；
 其中，由来源中国的科学家发表的文献数目为 5036 篇，含 ESI 高被引论文 71 篇（图 \@ref(fig:wos-search-result)，[^fn-wos-query]）。
 
-```{r wos-search-result, fig.cap="在 WoS 数据库检索时的结果界面"}
+```{r wos-search-result, fig.cap="在 WoS 数据库检索时的结果界面",echo=FALSE}
 knitr::include_graphics("figure/wos-search-result.png")
 ```
 
@@ -27,6 +22,15 @@ knitr::include_graphics("figure/wos-search-result.png")
 - #4，即由中国人发表（含参与）的全部与益生菌相关研究的高被引论文的完整内容。
 
 WoS 导出的数据主要由 `bibliometrix` 软件包处理。
+
+
+```{r}
+echo <- knitr::opts_chunk$get("echo")
+eval <- knitr::opts_chunk$get("eval")
+if (!isTRUE(echo)) knitr::opts_chunk$set(echo = TRUE)
+if (isTRUE(eval)) knitr::opts_chunk$set(eval = FALSE)
+```
+
 
 ```{r}
 highly_cited_export <- "data-raw/probiotic-full-result-highly-cited-record-export.txt"
@@ -177,13 +181,120 @@ eukaryotic_organism <- tibble(ltp = ltp_LSU$tip.label) %>%
            sep = "_",
            extra = "drop")  # extra is subsp. info
 organism <- rbind(prokaryotic_organism, eukaryotic_organism)
+
 saveRDS(organism, file = "data/organism.Rds")
 ```
+
+```{r eval=TRUE}
+organism <- readRDS("data/organism.Rds")
+```
+
 
 这些物种共有 `r nrow(organism)` 个，
 来自于 `r length(unique(organism$genus))` 个不同的属，
 `r length(unique(organism$family))` 个不同的科。
 
-```{r include=FALSE}
-knitr::opts_chunk$set(echo = echo)
+## 审查菌种
+
+对文献中的菌种、菌株进行鉴定，是评估菌株特异性研究内容的前提。
+粗分成下列几个步骤：
+
+```{r species-workflow, fig.cap=caption_download("获取菌株信息的工作流"), echo = FALSE, eval=TRUE}
+DiagrammeR::grViz(
+  "digraph {
+    graph [layout = dot, rankdir =TB]
+    
+    node [shape = rectangle]
+    rec1 [label = 'Step 1. Locate genus name extract adjacent downstream words']
+    rec2 [label = 'Step 2. Resolve genus name']
+    rec3 [label = 'Step 3. Resolve species name']
+    rec4 [label = 'Step 4. Resolve subsp. or strain name (if possible)']
+    
+    rec1 -> rec2 -> rec3 -> rec4
+  }",
+  height = 300
+)
+```
+```{r}
+highly_cited <- readRDS("data/highly_cited.RDS")
+china_study <- readRDS("data/china_study.RDS")
+organism <- readRDS("data/organism.Rds")
+
+organism <- organism %>%
+  mutate(species1 = paste(genus, species, sep = " ")) %>%
+  mutate(species2 = paste(substr(genus,1,1),"\\. ",species, sep = ""))
+genus <- paste0(unique(organism$genus), collapse = "|")
+species1 <- paste0(unique(organism$species1),collapse = "|")
+species2 <- paste0(unique(organism$species2),collapse = "|")
+
+```
+
+
+### Step 1
+
+第一步还要细分为以下几个阶段：
+
+- 用全部的物种去匹配，获得菌种的列表
+
+  分成 3 个途径，首先是完整的物种名（如*Bacillus subtilis*，其次是缩写
+  （如*B. subtilis*），再次仅使用物种的属名（如*Bacillus*)。
+  这一步所得的结果如图 \@ref(fig:content-strain-block) 所示，由图可知，仅使用
+  属名搜索发现的覆盖面最广，而使用缩写比全名也要多 200 多个结果，即在 200 多篇
+  论文摘要中发现了缩略语形式的物种名称。
+
+- 再用菌种的列表构造新的表达式，去尽可能的获取菌株
+
+```{r}
+all_content <- c(highly_cited$AB, china_study$AB)
+content_block1 <- str_extract_all(all_content, 
+                                 pattern = regex(species1, ignore_case = TRUE))
+content_block2 <- str_extract_all(all_content,
+                                  pattern = regex(paste0("\\b(",species2,")\\b"),
+                                                  ignore_case = TRUE))
+content_block3 <- str_extract_all(all_content,
+                                  pattern = regex(genus, ignore_case = TRUE))
+
+content_block <- list(r1 = content_block1,
+                      r2 = content_block2,
+                      r3 = content_block3)
+
+saveRDS(content_block, file = "data/strain-content-block.Rds")
+```
+
+
+
+```{r content-strain-block, fig.cap=caption_download("3个方法提取物种名的结果"),eval=TRUE}
+content_block <- readRDS("data/strain-content-block.Rds")
+l <- lapply(content_block, function(x) which(sapply(x, length)>0))
+ggVennDiagram(l,category.names = c("full name","abbreviation","only genus")) +
+  scale_x_continuous(expand = expansion(mult = 0.1))
+```
+
+
+```{r content-genus-name, fig.cap=caption_download("可见的属名"),eval=TRUE}
+genus_found <- table(unlist(content_block$r3))
+# hist(genus_found,breaks = 100,ylim = c(0,20))
+set.seed(20201223)
+ggwordcloud(names(genus_found),as.numeric(genus_found),min.freq = 10,
+            random.color = TRUE, fontface = "italic") 
+```
+图 \@ref(fig:content-genus-name) 展示最常见的几个属；
+图 \@ref(fig:content-strain-name) 展示最常见的几个物种。
+
+
+```{r content-strain-name, fig.cap=caption_download("可见的物种名"),eval=TRUE}
+species_found <- table(unlist(content_block$r1))
+saveRDS(species_found, file = "data/species-found.Rds")
+# hist(genus_found,breaks = 100,ylim = c(0,20))
+set.seed(20201223)
+ggwordcloud(names(species_found),as.numeric(species_found),min.freq = 10,
+            random.color = TRUE,scale = c(2,0.4),
+            fontface = "italic") 
+```
+
+
+
+```{r include=FALSE, eval=TRUE}
+knitr::opts_chunk$set(echo = echo, 
+                      eval = eval)
 ```
