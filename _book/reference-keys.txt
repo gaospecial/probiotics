@@ -1,5 +1,8 @@
 fig:wos-search-result
 fig:species-workflow
+fig:content-strain-block
+fig:content-genus-name
+fig:content-strain-name
 fig:global-growth-by-year
 fig:global-output-by-country
 fig:global-category
@@ -23,6 +26,8 @@ fig:highlycited-histnet
 fig:highlycited-vip-table
 fig:highlycited-keyword-network
 fig:highlycited-disease-count
+fig:highly-cited-ps-network
+fig:probiotic-year-by-year
 fig:china-detailed-4d-barplot
 fig:china-detailed-authorProdOverTime
 fig:china-detailed-author-net
@@ -36,6 +41,7 @@ raw-data
 文献数据的预处理
 物种信息的处理
 审查菌种
+step-1
 intro
 益生菌相关研究现正处于爆炸式增长阶段
 中国也有非常多的益生菌研究成果
@@ -56,9 +62,14 @@ highly-cited
 力量
 研究脉络
 疾病
+highly-cited-species
+益生菌联用
+益生菌的热度
 china-detailed
 国内研究论文四维概览
 大佬-1
 力量-1
 研究脉络-1
 疾病-1
+highly-cite-xlsx
+china-study-xlsx
