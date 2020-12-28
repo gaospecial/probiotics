@@ -1,0 +1,71 @@
+\cleardoublepage 
+
+# (APPENDIX) 附录 {-}
+
+
+# 高引文献论文清单 {#highly-cite-xlsx}
+
+```{r}
+openxlsx::write.xlsx(x = readRDS("data/highly_cited.RDS"),
+                     file = "data/highly_cited.xlsx")
+```
+
+点击下载 [Excel 文档](./data/highly_cited.xlsx)。
+
+这个 Excel 文档的列名对应的含义如下表所示：
+
+Field |	Description
+---------|---------
+PT |   类型，PT 一般为 J。
+AU |	作者简写名字（如GAO CH）Authors
+AF |    作者全名（如 “GAO, CHUN-HUI”，全名姓在前，名在后，以逗号分隔。不过英文名字中间名仍为缩写，如 “MILLER, AARON W.”）Author Full Name
+TI |	文章标题Document Title
+SO |	期刊名称Publication Name (or Source, **Journal**)
+DT |	在完整导出时字段名为DT，Fast5K导出时不含这一字段。Document Type (Article, Review, Editorial, etc)
+DE |	**Authors’ Keywords**
+ID |	**Keywords associated by SCOPUS or ISI database**
+AB |	Abstract
+C1 |	**Author Address**
+RP |	Reprint Address/**Correponding Author**
+EM | 通讯作者的电子邮箱
+RI |  Researcher ID
+OI |  ORCID
+FU |  基金资助，Fundation or Grant
+FX | 基金资助的内文
+CR |  Cited Reference
+NR | 数字
+TC |	Times Cited
+Z9 | 数字
+U1 | 数字
+U2 | 数字
+PU | 出版商，如：ELSEVIER
+PI | 出版商城市，如阿姆斯特丹（AMSTERDAM）
+PA | 出版商地址
+SN |  ISSN Number
+EI | e-ISSN
+J9 |  期刊缩写
+JI |  ISO规范的期刊缩写
+PD |  发表日期，如FEB 5，不含年份
+PY |  发表年份
+VL | Volume
+AR | 数字
+DI |  **DOI**
+PG | 页数，如8
+WC |  学科分类，如：Engineering, Environmental; Environmental Sciences
+SC |  学科分类，如：Engineering; Environmental Sciences & Ecology
+GA | 如JW2KZ
+UT |	Unique Article Identifier
+PM |  PubMed ID
+DA | 数据导出和下载的日期
+AU_UN  | Author Institution，提取全部作者单位信息（即 C1）的第一个字段（逗号分隔）
+AU1_UN | Author First Institution
+DB |	数据库
+
+# 中国的益生菌研究论文清单 {#china-study-xlsx}
+
+```{r}
+openxlsx::write.xlsx(x = readRDS("data/china_study.RDS"),
+                     file = "data/china_study.xlsx")
+```
+
+点击下载 [Excel 文档](./data/china_study.xlsx)。
