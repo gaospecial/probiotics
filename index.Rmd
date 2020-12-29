@@ -71,7 +71,7 @@ source("./function.R")
 这本书是这样的，第 \@ref(intro) 章介绍了全球范围内相关研究的概括，
 第 \@ref(china-study) 章则介绍了中国本土益生菌研究的概括，
 第 \@ref(highly-cited) - \@ref(highly-cited-species) 章则基于高被引论文，剖析了益生菌研究的热点，
-第 \@ref(china-detailed) 章则更完整的展示了中国本土益生菌研究的各个方面。
+第 \@ref(china-detailed) - \@ref(china-study-species) 章则更完整的展示了中国本土益生菌研究的各个方面。
 
 
 [^wos]: WoS 即通常说的 SCI 数据库。该数据库是目前世界范围内最权威的科技文献数据库，
