@@ -37,6 +37,8 @@ fig:china-detailed-histnet
 fig:china-detailed-vip-table
 fig:china-detailed-keyword-network
 fig:china-detailed-disease-count
+fig:china-study-ps-network
+fig:china-species-year-by-year
 raw-data
 文献数据的预处理
 物种信息的处理
@@ -71,5 +73,8 @@ china-detailed
 力量-1
 研究脉络-1
 疾病-1
+china-study-species
+益生菌联用-1
+益生菌的热度-1
 highly-cite-xlsx
 china-study-xlsx
