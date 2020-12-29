@@ -199,7 +199,7 @@ organism <- readRDS("data/organism.Rds")
 对文献中的菌种、菌株进行鉴定，是评估菌株特异性研究内容的前提。
 粗分成下列几个步骤：
 
-```{r species-workflow, fig.cap=caption_download("获取菌株信息的工作流"), echo = FALSE, eval=TRUE}
+```{r species-workflow, fig.cap="获取菌株信息的工作流", echo = FALSE, eval=TRUE}
 DiagrammeR::grViz(
   "digraph {
     graph [layout = dot, rankdir =TB]
@@ -230,7 +230,6 @@ species2 <- paste0(unique(organism$species2),collapse = "|")
 ```
 
 
-### Step 1
 
 第一步还要细分为以下几个阶段：
 
@@ -268,6 +267,7 @@ content_block <- readRDS("data/strain-content-block.Rds")
 l <- lapply(content_block, function(x) which(sapply(x, length)>0))
 ggVennDiagram(l,category.names = c("full name","abbreviation","only genus")) +
   scale_x_continuous(expand = expansion(mult = 0.1))
+graph2pptx()
 ```
 
 
@@ -277,6 +277,7 @@ genus_found <- table(unlist(content_block$r3))
 set.seed(20201223)
 ggwordcloud(names(genus_found),as.numeric(genus_found),min.freq = 10,
             random.color = TRUE, fontface = "italic") 
+graph2pptx()
 ```
 图 \@ref(fig:content-genus-name) 展示最常见的几个属；
 图 \@ref(fig:content-strain-name) 展示最常见的几个物种。
@@ -290,6 +291,7 @@ set.seed(20201223)
 ggwordcloud(names(species_found),as.numeric(species_found),min.freq = 10,
             random.color = TRUE,scale = c(2,0.4),
             fontface = "italic") 
+graph2pptx()
 ```
 
 
