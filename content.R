@@ -63,3 +63,22 @@ shrink_lvl <- function(x, sort = TRUE, keep = 9, other = "Other"){
   ret[idx] <- x[idx]
   return(ret)
 }
+
+# 对问卷中的选择题进行可视化
+summarise_plot <- function(data, 
+                           question = "Q1", 
+                           plot = c("pie","bar"), 
+                           multi_choice = FALSE, 
+                           row_split = "┋"  ){
+  plot <- match.arg(plot)
+  if (multi_choice) data <- data %>% separate_rows(question,sep = row_split)
+  x <- data[[question]]
+  x <- str_wrap(x, width = 24, exdent = 4)
+  if (plot == "pie") p <- ggpie(x, sort = FALSE) + 
+    guides(fill = guide_legend(reverse = TRUE)) +
+    theme(legend.text = element_text(margin = margin(t=2,b=2)))
+  if (plot == "bar") p <- hbarplot(x, show = "name", sort = FALSE)
+  return(p)
+}
+
+

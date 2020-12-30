@@ -25,6 +25,8 @@ knitr::opts_chunk$set(echo = FALSE,
                       warning = FALSE,
                       message = FALSE,
                       fig.path = "plot/",
+                      fig.width = 8,
+                      fig.asp = 0.618,
                       dev = c("png","pdf"),
                       cache = FALSE,
                       out.width = "100%")
@@ -57,6 +59,8 @@ library(cowplot)
 library(ggVennDiagram)
 library(ggwordcloud)
 library(tidyr)
+library(shadowtext)
+library(sf)
 
 theme_set(theme_bw())
 source("./function.R")

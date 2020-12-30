@@ -27,11 +27,14 @@ is.part_of_china <- function (x) {
 }
 
 # show file download links for figure
-caption_download <- function(...){
-  x <- paste0(...," [ppt](", fig_path(".pptx"),"),")
-  x <- paste0(x, " [pdf](", fig_path(".pdf"),")")
+caption_download <- function(..., PPT = TRUE, PDF = TRUE){
+  x <- paste0(...)
+  if (PPT) x <- paste0(x," [ppt](", fig_path(".pptx"),"),")
+  if (PDF) x <- paste0(x, " [pdf](", fig_path(".pdf"),")")
   return(x)
 }
+
+capd <- caption_download
 
 # export current plot to .pptx
 graph2pptx <- function(..., file = fig_path(".pptx")){
@@ -46,9 +49,10 @@ simplify_document_type <- function(x){
   return(x)
 }
 
+
 source("geocode.R")
 source("hbarplot.R")
 source("network.R")
-source("content.R")
+source("content.R", encoding = 'UTF-8')
 source("bibliometrix.R")
 

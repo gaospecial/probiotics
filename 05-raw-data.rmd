@@ -153,7 +153,7 @@ ggsave("figure/ltp-tree.png", plot = p, scale = 2)
 
 图 \@ref(fig:ltp-tree) 可以一瞥所有这些物种。不过我们关心的是属名。
 
-```{r ltp-tree, fig.cap="全部物种的进化树"}
+```{r ltp-tree, fig.cap="全部物种的进化树", eval=TRUE}
 knitr::include_graphics("figure/ltp-tree.png")
 ```
 

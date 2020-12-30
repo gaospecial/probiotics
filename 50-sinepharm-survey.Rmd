@@ -1,0 +1,460 @@
+# 医生对于益生菌食品/药品的看法 {#sinepharm-survey}
+
+2020 年夏，在热心肠研究院和上药信谊有限责任公司的联合组织下，
+对全国多地的医生及医药从业人士进行了益生菌主题的调研。
+他们都是全国各大医院的医生或者药店的经营人员，
+他们的观点很大程度上反映了一线应用和产品销售的痛点。
+
+```{r}
+excel <- "data-raw/sinepharm-survey.xlsx"
+data <- openxlsx::read.xlsx(excel) %>% as_tibble()
+original_colnames <- colnames(data)
+new_colnames <- c("id","submit_time","elapsed_time","source","source_detail","IP",paste0(rep("Q",16),1:16),"name","hospital","hospital_lvl","hospital_section","province","comment")
+names(original_colnames) <- new_colnames
+colnames(data) <- new_colnames
+data <- data %>%
+  mutate(ip_address = str_extract(IP,"\\(.*\\)")) %>%
+  mutate(ip_address_2 = str_remove_all(ip_address, "\\(|\\)")) %>%
+  separate(ip_address_2, sep = "-", into = c("ip_province","ip_city")) %>%
+  mutate(region = ifelse(str_detect(ip_province,"上海"), "上海","其它")) %>%
+  mutate(type = "其它") %>% 
+  mutate(type = ifelse(str_detect(hospital,"院|中心|卫生"), "医院", type)) %>%
+  mutate(type = ifelse(str_detect(hospital,"店|房"),"药店",type)) %>%
+  mutate(hospital_lvl = str_replace(hospital_lvl, "1","一")) %>%
+  mutate(hospital_lvl = str_replace(hospital_lvl, "2","二")) %>%
+  mutate(hospital_lvl = str_replace(hospital_lvl, "3","三")) %>%
+  mutate(hospital_lvl_2 = str_extract(hospital_lvl, "一|二|三" )) %>% 
+  mutate(hospital_lvl_2 = ifelse(str_detect(hospital_lvl_2, "一|二|三"),hospital_lvl_2, "其它")) %>%
+  separate(Q3, into = c("Q3","Q3_1"), sep = "，", extra = "drop") %>%
+  separate(Q4, into = c("Q4","Q4_1"), sep = "（", extra = "drop") %>%
+  separate(Q9, into = c("Q9","Q9_1"), sep = "〖", extra = "drop")
+```
+
+本次调研采用的问卷一共有 16 个问题，包含单选、多选等不同类型问题，
+调研结束时共回收了 `r nrow(data)` 份有效问卷，接下来我们将分几大块依次进行介绍。
+
+
+## 调研对象
+
+本次调研的参与者来自全国各地，主体是医院的医生，
+一、二、三级医院数目均不少，以三级医院最多。
+
+### 调查对象来自全国
+
+#### Map
+
+```{r sinepharm-survey-map, fig.cap=capd("参与调研人数在全国的分布图")}
+cn <- read_sf("data-raw/chinamap-lite/chinamap_lite.shp")
+count <- table(data$ip_province) %>%
+  as.data.frame()
+colnames(count) <- c("name_1", "count")
+cn <- cn %>% left_join(count)
+ggplot(cn) + geom_sf(aes(fill=count)) +
+  scale_fill_distiller(palette = "Blues", name = "人数", direction = 1) + 
+  theme_minimal() +
+  theme(legend.position = c(0.9,0.4)) 
+graph2pptx()
+```
+
+#### Bar plot
+
+```{r sinepharm-province-barplot, fig.cap=capd("参与人数最多的 20 个省市")}
+d <- shrink_lvl(data$ip_province, other = "其它", keep = 19)
+hbarplot(d) +
+    labs(x="",y="",title = "")
+graph2pptx()
+```
+
+
+### 主要是医院的医生
+
+#### Bar plot
+
+```{r sinepharm-survey-type-barplot, fig.asp=0.3, fig.width=4, fig.cap=caption_download("调查对象的身份")}
+hbarplot(data$type) +
+  labs(x="",y="")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r sinepharm-survey-type-piechart, fig.cap=caption_download("调查对象的身份")}
+ggpie(data$type) +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+
+### 且医生以来自于三甲医院的最多
+
+#### Bar plot
+
+```{r sinepharm-survey-hospital-lvl2-barplot, fig.asp=0.3, fig.width=4, fig.cap=capd("医院对象的级别")}
+hbarplot(data$hospital_lvl_2) +
+    labs(x="",y="")
+graph2pptx()
+
+```
+#### Pie chart
+
+```{r sinepharm-survey-hospital-lvl2-piechart, fig.cap=capd("医院对象的级别")}
+ggpie(data$hospital_lvl_2) +
+    labs(x="",y="", fill = "")
+graph2pptx()
+
+```
+
+接下来，我们将对 16 个问题的答案进行解读。
+
+## 对肠道健康的科学认识
+
+### 对于肠道微生态研究普遍有一定程度了解
+
+#### Bar plot
+
+```{r ss-q1-bar, fig.width=4, fig.cap = capd(original_colnames["Q1"])}
+summarise_plot(data, "Q1", plot="bar") +
+  labs(x = "", y = "")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r ss-q1-pie, fig.cap = capd(original_colnames["Q1"])}
+summarise_plot(data, "Q1", plot="pie") +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+
+### 基本认同“加强临床营养可让患者受益”的观点
+
+#### Bar plot
+
+```{r ss-q2-bar,fig.width=4, fig.cap = capd(original_colnames["Q2"])}
+summarise_plot(data, "Q2", plot="bar") +
+  labs(x = "", y = "")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r ss-q2-pie, fig.cap = capd(original_colnames["Q2"])}
+summarise_plot(data, "Q2", plot="pie") +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+## 对益生菌循证的态度
+
+### 益生菌食品在临床的使用相对较少
+
+#### Bar plot
+
+```{r ss-q3-bar, fig.asp=0.3, fig.width=4,fig.cap = capd(original_colnames["Q3"])}
+summarise_plot(data, "Q3", plot="bar") +
+  labs(x = "", y = "")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r ss-q3-pie, fig.cap = capd(original_colnames["Q3"])}
+summarise_plot(data, "Q3", plot="pie") +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+
+### 愿意推荐益生菌食品给病人
+
+#### Bar plot
+
+```{r ss-q4-bar, fig.width=4,fig.cap = capd(original_colnames["Q4"])}
+summarise_plot(data, "Q4", plot="bar") +
+  labs(x = "", y = "")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r ss-q4-pie, fig.cap = capd(original_colnames["Q4"])}
+summarise_plot(data, "Q4", plot="pie") +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+
+### 有高质量询证证据支持的益生菌食品当然更受欢迎
+
+#### Bar plot
+
+```{r ss-q5-bar, fig.width=4,fig.cap = capd(original_colnames["Q5"])}
+summarise_plot(data, "Q5", plot="bar") +
+  labs(x = "", y = "")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r ss-q5-pie, fig.cap = capd(original_colnames["Q5"])}
+summarise_plot(data, "Q5", plot="pie") +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+
+
+### 医生群体更愿意单独使用药品，但也不排斥益生菌食品
+
+#### Bar plot
+
+```{r ss-q6-bar, fig.cap = capd(original_colnames["Q6"])}
+summarise_plot(data, "Q6", plot="bar") +
+  labs(x = "", y = "")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r ss-q6-pie, fig.cap = capd(original_colnames["Q6"])}
+summarise_plot(data, "Q6", plot="pie") +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+
+
+
+### 对参与真实世界研究抱有兴趣
+
+#### Bar plot
+
+```{r ss-q7-bar, fig.asp=0.5, fig.width=4,fig.cap = capd(original_colnames["Q7"])}
+summarise_plot(data, "Q7", plot="bar") +
+  labs(x = "", y = "")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r ss-q7-pie, fig.cap = capd(original_colnames["Q7"])}
+summarise_plot(data, "Q7", plot="pie") +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+
+
+
+### 我希望益生菌是有效、好吃且便宜的
+
+#### Bar plot
+
+```{r ss-q8-bar, fig.cap = capd(original_colnames["Q8"])}
+summarise_plot(data, "Q8", plot="bar", multi_choice = TRUE) +
+  labs(x = "", y = "")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r ss-q8-pie, fig.cap = capd(original_colnames["Q8"])}
+summarise_plot(data, "Q8", plot="pie", multi_choice = TRUE) +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+
+## 你为什么愿意向身边人推荐益生菌？
+
+### 推广益生菌食品可以有很多理由
+
+#### Bar plot
+
+```{r ss-q9-bar, fig.cap = capd(original_colnames["Q9"])}
+summarise_plot(data, "Q9", plot="bar", multi_choice = T) +
+  labs(x = "", y = "")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r ss-q9-pie, fig.cap = capd(original_colnames["Q9"])}
+summarise_plot(data, "Q9", plot="pie", multi_choice = T) +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+
+
+### 普遍认为营养膳食科和院内药房是益生菌食品的最佳销售场所
+
+#### Bar plot
+
+```{r ss-q10-bar, fig.cap = capd(original_colnames["Q4"])}
+summarise_plot(data, "Q10", plot="bar", multi_choice = T) +
+  labs(x = "", y = "")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r ss-q10-pie, fig.cap = capd(original_colnames["Q4"])}
+summarise_plot(data, "Q10", plot="pie", multi_choice = T) +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+
+
+### 医生向患者推荐益生菌要冒合规的风险
+
+#### Bar plot
+
+```{r ss-q11-bar, fig.asp=0.4, fig.width=4,fig.cap = capd(original_colnames["Q11"])}
+summarise_plot(data, "Q11", plot="bar") +
+  labs(x = "", y = "")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r ss-q11-pie, fig.cap = capd(original_colnames["Q11"])}
+summarise_plot(data, "Q11", plot="pie") +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+
+
+### 医生需要专业的系统和团队协助完成这些工作
+
+#### Bar plot
+
+```{r ss-q12-bar, fig.asp=0.4, fig.width=4,fig.cap = capd(original_colnames["Q12"])}
+summarise_plot(data, "Q12", plot="bar") +
+  labs(x = "", y = "")
+graph2pptx()
+
+```
+
+#### Pie chart
+
+```{r ss-q12-pie, fig.cap = capd(original_colnames["Q12"])}
+summarise_plot(data, "Q12", plot="pie") +
+  labs(fill = "")
+graph2pptx()
+
+```
+
+## 对益生菌商品价格的期待有哪些？
+
+### 医生会将益生菌食品置于与药品接近的价格区间
+
+
+```{r}
+library(rstatix)
+d <- data.frame(x = as.numeric(data$Q13)) %>%
+  filter(!is_outlier(x))
+```
+
+#### Density plot
+
+```{r ss-q13-density, fig.cap = capd(original_colnames["Q13"])}
+ggplot(d,aes(x)) + geom_density(fill = "firebrick", alpha = 1/2) +
+  labs(x = "价格（元）", y = "选择对应价格的人数比例") +
+  scale_y_continuous(labels = function(x) paste(x *100,"%"))
+graph2pptx()
+
+```
+
+#### Boxplot
+
+```{r ss-q13-boxplot,fig.asp=0.2, fig.width=4, fig.cap = capd(original_colnames["Q13"])}
+ggplot(d,aes(x = "", y = x)) + geom_boxplot(fill = "firebrick", alpha = 1/2) +
+  labs(x = "", y = "价格（元）") +
+  coord_flip()
+graph2pptx()
+
+```
+
+
+### 每天10元左右，是各方认为较合理的经济负担
+
+```{r}
+d2 <- data.frame(x = as.numeric(data$Q14)) %>%
+  filter(!is_outlier(x))
+```
+
+#### Density plot
+
+```{r ss-q14-density, fig.cap = capd(original_colnames["Q14"])}
+ggplot(d2,aes(x)) + geom_density(fill = "firebrick", alpha = 1/2) +
+  labs(x = "价格（元）", y = "选择对应价格的人数比例") +
+  scale_y_continuous(labels = function(x) paste(x *100,"%"))
+graph2pptx()
+
+```
+
+#### Boxplot
+
+```{r ss-q14-boxplot, fig.asp=0.2, fig.width=4, fig.cap = capd(original_colnames["Q14"])}
+ggplot(d2,aes(x = "", y = x)) + geom_boxplot(fill = "firebrick", alpha = 1/2) +
+  labs(x = "", y = "价格（元）") +
+  coord_flip()
+graph2pptx()
+
+```
+
+## 意见和建议
+
+### 对益生菌疗效给予厚望，希望有更多询证支持，呼吁加强科普等
+
+
+```{r ss-q15-wordcloud, fig.cap =capd(original_colnames["Q15"])}
+wc <- mrgut::mrgut_word_freq(data$Q15) %>%
+    filter(!str_detect(word_segmentation, "暂|无|没")) %>%
+  filter(length(word_segmentation) > 1)
+ggwordcloud(wc[[1]], wc[[2]],min.freq = 5,scale = c(3,0.5))
+graph2pptx()
+```
+
+
+### 价格、疗效、口感、宣传、安全性等因素是大众痛点
+
+```{r ss-q16-wordcloud, fig.cap = original_colnames["Q16"]}
+wc <- mrgut::mrgut_word_freq(data$Q16) %>%
+  filter(word_segmentation != "空") %>%
+  filter(!str_detect(word_segmentation, "暂时|无|没"))
+wordcloud2(wc, fontFamily = "微软雅黑",size = 0.5)
+```
+
+
+
+
+
