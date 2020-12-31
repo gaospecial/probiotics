@@ -13,6 +13,8 @@ geometry: [b5paper, tmargin=2.5cm, bmargin=2.5cm, lmargin=3.5cm, rmargin=2.5cm]
 site: bookdown::bookdown_site
 description: "使用文献计量学的方法解读益生菌相关的研究内容"
 github-repo: gaospecial/probiotics
+always_allow_html: true
+
 #cover-image: images/cover.jpg
 ---
 
