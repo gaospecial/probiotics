@@ -1,4 +1,4 @@
-# 专业人士调研
+# 专业人士调研 {#professional-survey}
 
 
 > 各位老师好，我们正在进行一项面向专业人士的调研，希望收集到包括您在内的专业人士对益生菌的看法，并基于调研结果给消费者提供一个专业、权威的指南。
@@ -10,7 +10,7 @@
 ## 关于“热心肠智库”
 
 
-```{r fig.width=4}
+```{r fig.width=4, out.width="30%"}
 include_graphics("figure/mob_about_zhiku.png")
 ```
 
@@ -170,6 +170,113 @@ opts_current$set(fig.cap=capd(name))
 ggpie(x) + labs(fill="") 
 graph2pptx()
 ```
+
+那么，货架期的益生菌含菌量维持在什么程度比较合适呢？
+
+最多的调研对象建议使用百分比值的方式来评价。
+
+```{r pro-survey-q13-pie}
+idx <- which(str_detect(new_colname, "Q13"))[[1]]
+x <- str_replace_all(data[[idx]], "：.*", "")
+name <- str_remove(new_colname[[idx]][[1]], "^\\S+")
+opts_current$set(fig.cap=capd(name))
+ggpie(x) + labs(fill="") 
+graph2pptx()
+```
+
+
+调研对象认为对于不同的人群来说，益生菌的理想用量也会有所差异（图 \@ref(fig:pro-survey-q10-q12-bar)）。
+
+- 0-3 岁，最多的人认为不应摄入，其次是小剂量（< 10 亿）；
+- 3-12 岁，最多的人认为可以摄入小剂量（< 10 亿，以及 10 - 50 亿），认为不应摄入的仍然排列第三；
+- 成人，最多的人认为可以摄入 50 - 100 亿的益生菌，且认为不应摄入的人数未能进入前五。
+
+```{r pro-survey-q10-q12-bar,fig.asp=0.5}
+idx <- which(str_detect(new_colname, "Q10|Q11|Q12"))
+x <- data[idx] 
+labs <- c("0-3岁","3-12岁","成人")
+plots <- lapply(seq_along(idx), function(i) {
+  hbarplot(data[[idx[[i]]]], n=5) + labs(x="",y="",title = labs[[i]])
+})
+plot_grid(plotlist = plots,ncol = 3)
+opts_current$set(fig.cap=capd("不同年龄段人群摄入多少益生菌比较合适？"))
+graph2pptx()
+```
+
+```{r eval=FALSE}
+# plot a radar
+x %>% pivot_longer(cols = 1:3, names_to = "age") %>%
+  group_by(age,value) %>%
+  summarise(count = n())
+```
+
+
+货架期保证 60% 以上的占主流意见，其中最多的要求在 70% - 80% 之间。
+
+```{r pro-survey-q13-hist}
+idx <- which(str_detect(new_colname, "Q13"))[[2]]
+x <- data[[idx]] %>% as.numeric()
+opts_current$set(fig.cap=capd("货架期细菌数量应当不低于多少（百分比）？"))
+hist(x, main = "", xlab = "百分比", ylab= "频次")
+graph2pptx()
+```
+
+## 如何保证益生菌产品质量和疗效？
+
+
+约四分之三的调研对象认为益生菌运输有必要采用冷链模式进行。
+
+```{r pro-survey-q14-pie}
+idx <- which(str_detect(new_colname, "Q14"))[[1]]
+x <- data[[idx]] 
+name <- str_remove(new_colname[[idx]][[1]], "^\\S+")
+opts_current$set(fig.cap=capd(name))
+ggpie(x) + labs(fill="")
+graph2pptx()
+```
+调研对象要求益生菌产品具有不同层级的人体临床试验的人数占近 9 成。
+
+```{r pro-survey-q15-pie}
+idx <- which(str_detect(new_colname, "Q15"))[[1]]
+x <- data[[idx]] 
+name <- str_remove(new_colname[[idx]][[1]], "^\\S+")
+opts_current$set(fig.cap=capd(name))
+ggpie(x) + labs(fill="")
+graph2pptx()
+```
+
+调研对象反应最强烈的益生菌乱象是“宣称包治百病”、“缺乏循证证据”和“成分作假”的行为。
+
+```{r pro-survey-q16-bar}
+# Q16 是个多选题
+idx <- which(str_detect(new_colname, "Q16"))
+x <- unlist(data[idx]) %>% as.character()
+x <- x[!is.na(x)]
+name <- str_remove(new_colname[idx][[1]], "^\\S+")
+opts_current$set(fig.cap=capd(name))
+hbarplot(x, n=7, show = "name") + labs(x="",y="")
+graph2pptx()
+```
+
+最被看好的益生菌产品赛道是肠道健康、改善代谢、快消类产品等（图 \@ref(fig:pro-survey-q17-bar)）。
+
+```{r pro-survey-q17-bar}
+# 多选题
+idx <- which(str_detect(new_colname, "Q17"))
+x <- unlist(data[idx]) %>% as.character()
+x <- x[!is.na(x)]
+name <- str_remove(new_colname[idx][[1]], "^\\S+")
+opts_current$set(fig.cap=capd(name))
+hbarplot(x, n=8, show = "name") + labs(x="",y="")
+graph2pptx()
+```
+
+
+
+
+
+
+
 
 
 
