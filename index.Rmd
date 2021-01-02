@@ -30,7 +30,7 @@ knitr::opts_chunk$set(echo = FALSE,
                       fig.width = 8,
                       fig.asp = 0.618,
                       dev = c("png","pdf"),
-                      cache = T,
+                      cache = FALSE,
                       out.width = "100%")
 
 # 填上你需要用到的包，如 c('ggplot2', 'dplyr')
@@ -83,6 +83,16 @@ source("./function.R")
 
 [^wos]: WoS 即通常说的 SCI 数据库。该数据库是目前世界范围内最权威的科技文献数据库，
 但是目前其仅仅收录了外文文献。
+
+为了深刻把脉益生菌产业发展的动态和前景，在 [热心肠研究院](http://mr-gut.cn)、
+[上海医药集团上药信谊药厂](http://www.sinepharm.com) 以及
+[天猫国际](http://tmall.com) 的支持下，我们又分别调研了益生菌相关基础研究的科学家群体、
+一线临床的医生群体，以及具有典型覆盖面的消费者群体，力图从研究、应用和市场等多个
+不同维度展示益生菌相关产品面临的机遇和挑战。
+
+其中第 \@ref(sinepharm-survey) 章介绍了临床医生调研的问卷结果，
+第 \@ref(professional-survey) 章介绍了对基础和医学研究专业人士的调研问卷结果，
+第 \@ref(consumer-survey) 章介绍了对消费者的问卷调查结果。
 
 本书的内容仍在创作过程中，内容持续更新，请将本书链接加为书签，以免找不到回来的路。
 

@@ -1,0 +1,294 @@
+# 消费者调研 {#consumer-survey}
+
+
+
+```{r}
+data <- read_csv("data-raw/fengniao-survey/consumer/AnswernaireReadable.csv",
+                guess_max = 5000)
+original_colname <- colnames(data)
+
+# meta data
+meta_colname <- c("no","id","ip","ip_province","city","start","stop","interval","status",
+                 "P_No","M_No")
+meta_data <- data[1:11]
+colnames(meta_data) <- meta_colname
+
+# main questions
+main_question_col <- str_detect(original_colname,"^Q[0-9]{1,2}")
+main_question_data <- data[main_question_col]
+main_question_no <- colnames(main_question_data) %>% 
+  gsub(pattern = "_.*", replacement = "") %>% 
+  unique()
+
+# silent questions
+silent_question_col <- str_detect(original_colname,"^S[0-9]{1,2}")
+silent_question_data <- data[silent_question_col]
+silent_question_no <- colnames(silent_question_data) %>% 
+  gsub(pattern = "_.*", replacement = "") %>% 
+  unique()
+
+# background questions
+back_question_col <- str_detect(original_colname,"^T[0-9]{1,2}")
+back_question_data <- data[back_question_col]
+back_question_no <- colnames(back_question_data) %>% 
+  gsub(pattern = "_.*", replacement = "") %>% 
+  unique()
+```
+
+
+## 调研对象
+
+> 为了体现调研的客观性，同时透明化可能存在的偏好性，
+对调研对象进行说明是很有必要的。
+
+### 地域分布
+
+参与调研的消费者遍布全国各地，其中尤以广东、河南、上海等省市人数最多。
+
+**地图**
+
+```{r consumer-survey-map, fig.cap=capd("参与调研人士的地域分布")}
+cn <- read_sf("data-raw/chinamap-lite/chinamap_lite.shp")
+count <- table(meta_data$ip_province) %>%
+  as.data.frame()
+colnames(count) <- c("name_1", "count")
+cn <- cn %>% left_join(count)
+ggplot(cn) + geom_sf(aes(fill=count)) +
+  scale_fill_distiller(palette = "Blues", name = "人数", direction = 1) + 
+  theme_minimal() +
+  theme(legend.position = c(0.9,0.4)) 
+graph2pptx()
+```
+
+**Bar plot**
+
+```{r  consumer-survey-province, fig.cap=capd("参与调研人士的地域分布")}
+d <- shrink_lvl(meta_data %>% 
+                  filter(ip_province != "0") %>% 
+                  pull(ip_province), other = "其它", keep = 19)
+
+hbarplot(d) +
+    labs(x="",y="",title = "")
+graph2pptx()
+```
+参与调研的人群经过优化，一线、二线和三线城市的比例相当。
+
+```{r}
+# 城市线级：S2b
+plot_this_question(data, "S2b", plot = "pie") + labs(fill = "")
+graph2pptx()
+```
+
+### 社会化属性
+
+性别以女性居多，约占 7 成。
+
+```{r fig.cap=capd("参与调研人士的性别")}
+# 性别：S4
+plot_this_question(data, "S4") + labs(fill = "")
+graph2pptx()
+```
+
+绝大多数是已婚且有小孩的消费者。
+
+```{r fig.cap=capd("婚育情况")}
+# 已婚：T1
+plot_this_question(data, "T1") + labs(fill = "")
+graph2pptx()
+```
+
+18 - 40 岁的消费者加起来占一半；
+41 岁以上的消费者占另外一半。
+
+综合婚育情况，可见消费者中最典型的画像是 **80 后的年轻父母们**。
+
+```{r fig.cap=capd("年龄")}
+# 年龄：S6
+plot_this_question(data, "S6_S6") + labs(fill = "")
+graph2pptx()
+```
+消费者的教育程度见图 \@ref(fig:consumer-education-pie)。
+
+```{r consumer-education-pie, fig.cap = capd("文化程度")}
+# 文化程度：T2
+plot_this_question(data, "T2") + labs(fill = "")
+graph2pptx()
+```
+## 产品形态和综合评价
+
+消费者最常使用的益生菌品类是乳酸菌饮料和酸奶，固体饮料和胶囊分列第 3、4 名。
+值得一提的是，使用医生开出的益生菌药品的消费者所占的人数最少，且远低于其它类型的消费。
+说明大部分人都把益生菌产品当做日常消费或保健品来购买。
+
+```{r consumer-product-type, fig.cap=capd(name)}
+# 购买的产品形态
+key <- "S8"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+
+最常购买的产品形态排名，基本与图 \@ref(fig:consumer-product-type) 相同。
+
+```{r fig.cap=capd(name)}
+# 最常购买的产品形态
+key <- "S9"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+
+使用益生菌产品的原因，排名第一的是日常消费，其次是因为肠胃健康需求。
+
+```{r fig.cap=capd(name)}
+key <- "Q1_Q1"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+而在那些以调理肠胃为目的的消费行为中，最多的适应症是消化不良、便秘、改善肠道微生态等。
+改善肠道微生态的购买动机能够排名第三，超过了胀气、食欲不振、腹泻等类型，
+说明很多消费者已经开始主动、超前的利用益生菌，以维持更好的肠道健康。
+
+```{r fig.cap=capd(name)}
+key <- "Q2_Q2"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+消费者对益生菌产品最不满意的地方，分别是不好保存、携带和食用不变、价格贵等。
+方便、便携性已经超过价格、副作用等因素，成为最大的消费痛点，值得各厂商重点关注。
+
+```{r fig.cap=capd(name)}
+key <- "Q7_Q7"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+
+## 消费习惯
+
+购买益生菌产品最常见的地方是超市和各种电商平台，包括线下和网上药店。
+
+```{r fig.cap=capd(name)}
+key <- "Q8_Q8"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+@TODO: 不同的商品类型购买来源不同。
+
+国产知名品牌是消费者最多的选择，远高于新兴品牌。
+不过，有意思的是当消费者选择海淘进口时，则愿意更多的选用非知名品牌。
+
+```{r fig.cap=capd(name)}
+key <- "Q9_Q9"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+综合性跨境电商平台是海淘益生菌的首选平台。
+
+```{r fig.cap=capd(name)}
+key <- "Q10_Q10"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+为了选择合适的品牌，消费者会愿意到专业性比较强的网站了解相关知识，
+或者直接咨询专业人士的意见。说明很大一部分的消费者了解选购益生菌是需要经过专业考量的。
+
+```{r fig.cap=capd(name)}
+key <- "Q11_Q11"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+
+
+```{r fig.cap=capd(name)}
+key <- "Q12_Q12"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+
+```{r fig.cap=capd(name)}
+key <- "Q12a_Q12a"
+plot_this_question(data, key, plot = "bar") + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+```{r fig.cap=capd(name)}
+key <- "Q13"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+
+下图说明益生菌产品的复购率还是比较高的。
+
+```{r fig.cap=capd(name)}
+key <- "Q14"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+几乎所有消费过益生菌的消费者都有向身边人推荐益生菌的倾向。
+
+
+```{r fig.cap=capd(name)}
+key <- "Q15"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+
+## 益生菌消费概念
+
+微生态平衡的观念已经开始深入人心。
+
+```{r fig.cap=capd(name)}
+key <- "Q16"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+
+消费者对菌株特异性也已经有了一些认识。
+
+
+```{r fig.cap=capd(name)}
+key <- "Q17"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+
+包含超过 2 个以上菌株的多菌株制剂已经是益生菌产品的主流。
+
+```{r fig.cap=capd(name)}
+key <- "Q18"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+
+认同多菌株更有效的消费者已经过半。
+
+```{r fig.cap=capd(name)}
+key <- "Q19"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+
+也有一些消费者认识到益生菌产品可能存在的风险。
+
+```{r fig.cap=capd(name)}
+key <- "Q20"
+plot_this_question(data, key) + labs(fill = "", x="",y="")
+name <- get_question_name(data, key)
+graph2pptx()
+```
+

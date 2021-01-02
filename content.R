@@ -65,6 +65,7 @@ shrink_lvl <- function(x, sort = TRUE, keep = 9, other = "Other"){
 }
 
 # 对问卷中的选择题进行可视化
+# 适用于问卷星的导出数据
 summarise_plot <- function(data, 
                            question = "Q1", 
                            plot = c("pie","bar"), 
@@ -82,3 +83,43 @@ summarise_plot <- function(data,
 }
 
 
+# 搜索问题，根据问题的类型自动选择绘制饼图或条形图
+# 适用于蜂鸟问卷的导出数据
+plot_this_question <- function(data, question, 
+                               multi_choice = "auto", 
+                               plot = c("auto","pie","bar"), ...){
+  plot <- match.arg(plot)
+  colname <- colnames(data)
+  idx <- which(str_detect(colname, question))
+  if (multi_choice == "auto"){
+    multi_choice <- FALSE
+    if (length(idx) > 2) multi_choice <- TRUE
+    if (any(str_detect(colname[idx], "多选"))) multi_choice <- TRUE
+  }
+  if (multi_choice) {
+    x <- unlist(data[idx]) %>% as.character()
+  } else {
+    x <- data[[idx[[1]]]]
+  }
+  
+  if (plot == "auto"){
+    if (multi_choice) {
+      plot <- "bar"
+    } else {
+      plot <- "pie"
+    }
+  }
+  if (plot == "pie") p <- ggpie(x, ...)
+  if (plot == "bar") p <- hbarplot(x, ...)
+  return(p)
+}
+
+
+# 搜索问题，获得问题题干
+# 适用于蜂鸟问卷的导出数据
+get_question_name <- function(data, question){
+  colname <- colnames(data)
+  idx <- which(str_detect(colname, question))
+  name <- str_extract(colname[idx][[1]], "([^\\.]+\\？)")
+  return(name)
+}
