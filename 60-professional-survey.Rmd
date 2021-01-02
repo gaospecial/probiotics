@@ -1,0 +1,179 @@
+# 专业人士调研
+
+
+> 各位老师好，我们正在进行一项面向专业人士的调研，希望收集到包括您在内的专业人士对益生菌的看法，并基于调研结果给消费者提供一个专业、权威的指南。
+
+热心肠研究院组织热心肠智库专家，并通过热心肠智库专家定向邀请了
+总计不超过 1000 人的专业人士参与了此次调研。
+
+
+## 关于“热心肠智库”
+
+
+```{r fig.width=4}
+include_graphics("figure/mob_about_zhiku.png")
+```
+
+
+热心肠智库于 2019 年 5 月正式成立，是由热心肠研究院发起的全球首家以“肠道”为主题的非官方、非营利性、非实体的在线智库。
+
+智库宗旨是促进国际国内肠道领域的学术交流与合作，为肠道领域的基础研究者、临床医生、产业科学家等提供产学研合作平台，为促进中国肠道领域学术进步及推动中国肠道产业健康发展提供支持平台。
+
+```{r}
+data <- read_csv("data-raw/fengniao-survey/professional/AnswernaireReadable.csv")
+original_colname <- colnames(data)
+question_col <- str_detect(original_colname,"^Q[0-9]{1,2}")
+questions <- original_colname[question_col]
+new_colname <- c("no","id","ip","ip_province","city","start","stop","interval","status",
+                 "P_No","M_No",questions,"X50")
+colnames(data) <- new_colname
+```
+
+
+## 调研对象
+
+此次调研的对象来自于全国多个省市（图 \@ref(fig:pro-survey-map)），
+其中尤以北京、广东、江西为多(图 \@ref(fig:pro-survey-province)）。
+
+**地图**
+
+```{r pro-survey-map, fig.cap=capd("调研专家的地域分布")}
+cn <- read_sf("data-raw/chinamap-lite/chinamap_lite.shp")
+count <- table(data$ip_province) %>%
+  as.data.frame()
+colnames(count) <- c("name_1", "count")
+cn <- cn %>% left_join(count)
+ggplot(cn) + geom_sf(aes(fill=count)) +
+  scale_fill_distiller(palette = "Blues", name = "人数", direction = 1) + 
+  theme_minimal() +
+  theme(legend.position = c(0.9,0.4)) 
+graph2pptx()
+```
+
+**Bar plot**
+
+```{r  pro-survey-province, fig.cap=capd("调研专家的地域分布")}
+d <- shrink_lvl(data %>% 
+                  filter(ip_province != "0") %>% 
+                  pull(ip_province), other = "其它", keep = 19)
+
+hbarplot(d) +
+    labs(x="",y="",title = "")
+graph2pptx()
+```
+
+其中超过一半的调研对象是基础研究者，超两成的临床医生，11% 的企业管理者和
+7.8% 的企业研发人员（图 \@ref(fig:pro-survey-job-piechart)）。
+
+```{r pro-survey-job-piechart, fig.cap=capd("调研对象的职业分布")}
+idx <- which(str_detect(new_colname, "职业"))
+x <- str_replace_all(data[[idx]], "其他请注明：", "其他")
+ggpie(x) + labs(fill="") 
+graph2pptx()
+```
+
+## 益生菌与健康之间的关系
+
+调研对象普遍认同补充益生菌可改善肠道和全身健康。
+但是，完全认同和有限认同的人数基本相当，不认同的人数非常少见（图 \@ref(fig:pro-survey-q3)）。
+
+
+
+```{r pro-survey-q3, fig.cap=capd("您是否认同“补充益生菌可改善肠道和全身健康”？")}
+idx <- which(str_detect(new_colname, "您是否认同“补充益生菌可改善肠道和全身健康”？"))
+x <- str_replace_all(data[[idx]], "其他请注明：", "其他")
+ggpie(x) + labs(fill="") 
+graph2pptx()
+```
+绝大多数调研对象认为即便是健康人，仍然可以通过服用益生菌促进健康。其中，
+支持“适度摄入”益生菌的人数最多（图 \@ref(fig:pro-survey-q4)）。
+不过，有意思的是也有 8.6% 的对象认为没有必要服用益生菌，这一比例要远大于
+不认同益生菌有益的比例，说明有些专业人士认为虽然益生菌可以改善健康，
+仍然不建议服用益生菌。
+
+
+```{r pro-survey-q4, fig.cap=capd("您认为健康人是否有必要摄入益生菌？")}
+idx <- which(str_detect(new_colname, "Q4"))
+x <- str_replace_all(data[[idx]], "其他请注明：", "其他")
+ggpie(x) + labs(fill="") 
+graph2pptx()
+```
+
+
+
+## 产品形态
+
+
+最受欢迎的产品形态是酸奶，其次是胶囊和固体饮料（粉剂）。
+
+```{r pro-survey-q5-pie, fig.cap=capd("您认为益生菌的最佳产品形态是？")}
+idx <- which(str_detect(new_colname, "Q5"))[[1]]
+x <- str_replace_all(data[[idx]], "^其他.*", "其他")
+ggpie(x) + labs(fill="") 
+graph2pptx()
+```
+```{r pro-survey-q5-bar, fig.cap=capd("您认为益生菌的最佳产品形态是？")}
+hbarplot(x) + labs(x="",y="")
+```
+
+## 菌株特异性受到较多关注
+
+93% 的调研对象支持益生菌功效存在“菌株特异性”（图 \@ref(fig:pro-survey-q6-pie)）。
+
+> **什么的益生菌的“菌株特异性”？**
+> 
+> 益生菌在分类学上可以有菌属、菌种和菌株定义。其中菌属的尺度最大，菌株的尺度最小。
+即不同菌株的益生菌可能属于同一菌种，不同菌种的益生菌又可能同属于一个菌属。
+菌株特异性指的是益生菌的功能可能在菌株水平存在差异。
+
+```{r pro-survey-q6-pie, fig.cap=capd("您认可益生菌的益生功能具有“菌株特异性”吗？")}
+idx <- which(str_detect(new_colname, "Q6"))[[1]]
+x <- str_replace_all(data[[idx]], "^其他.*", "其他")
+ggpie(x) + labs(fill="") 
+graph2pptx()
+```
+
+图 \@ref(fig:pro-survey-q7-pie) 显示单一菌株产品可能越来越受到排斥，
+多菌株产品成为主流，其中支持大于 10 个菌株的人数已经超两成。
+
+```{r pro-survey-q7-pie}
+idx <- which(str_detect(new_colname, "Q7"))[[1]]
+x <- str_replace_all(data[[idx]], "^其他.*", "其他")
+name <- str_remove(new_colname[[idx]][[1]], "^\\S+")
+opts_current$set(fig.cap=capd(name))
+ggpie(x) + labs(fill="") 
+graph2pptx()
+```
+调研对象对产品的透明性有更高的要求，近八成人士认为应当标明全部益生菌的菌株资料。
+
+```{r pro-survey-q8-pie}
+idx <- which(str_detect(new_colname, "Q8"))[[1]]
+x <- str_replace_all(data[[idx]], "^其他.*", "其他")
+name <- str_remove(new_colname[[idx]][[1]], "^\\S+")
+opts_current$set(fig.cap=capd(name))
+ggpie(x) + labs(fill="") 
+graph2pptx()
+```
+
+## 益生菌多少才合适？
+
+绝大多数的调研对象都支持通过临床研究确定最合适的出厂剂量
+（但是遗憾的是这方面的研究好像比较欠缺）。
+与此同时，最多的人支持 100 - 300 亿这个区间的益生菌剂量。
+
+
+```{r pro-survey-q9-pie}
+idx <- which(str_detect(new_colname, "Q9"))[[1]]
+x <- str_replace_all(data[[idx]], "^其他.*", "其他")
+name <- str_remove(new_colname[[idx]][[1]], "^\\S+")
+opts_current$set(fig.cap=capd(name))
+ggpie(x) + labs(fill="") 
+graph2pptx()
+```
+
+
+
+
+
+
+

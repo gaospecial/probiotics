@@ -53,7 +53,8 @@ ggpie <- function(x, sort = TRUE, decreasing = FALSE){
                     position = position_stack(0.5),
                     show.legend = FALSE) +
     coord_polar("y") +
-    theme_void()
+    theme_void() +
+    guides(fill=guide_legend(reverse = T))
 }
 
 
