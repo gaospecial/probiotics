@@ -91,8 +91,8 @@ source("./function.R")
 不同维度展示益生菌相关产品面临的机遇和挑战。
 
 其中第 \@ref(sinepharm-survey) 章介绍了临床医生调研的问卷结果，
-第 \@ref(professional-survey) 章介绍了对基础和医学研究专业人士的调研问卷结果，
-第 \@ref(consumer-survey) 章介绍了对消费者的问卷调查结果。
+第 \@ref(professional-survey) -  \@ref(professional-survey-mining)章介绍了对基础和医学研究专业人士的调研问卷结果，
+第 \@ref(consumer-survey) - \@ref(consumer-survey-mining) 章介绍了对消费者的问卷调查结果。
 
 本书的内容仍在创作过程中，内容持续更新，请将本书链接加为书签，以免找不到回来的路。
 

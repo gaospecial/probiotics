@@ -1,6 +1,6 @@
 # 消费者问卷数据挖掘 {#consumer-survey-mining}
 
-## 有效性和满意度
+## 满意度和有效性
 
 ```{r}
 data <- read_csv("data-raw/fengniao-survey/consumer/AnswernaireReadable.csv",
@@ -15,11 +15,28 @@ comment <- comment %>%
   mutate(city_lvl = factor(city_lvl, levels = c("一线城市","二线城市","三线城市")))
 ```
 
-### 最满意滴剂
+### 满意度评分
 
 益生菌的产品形式有很多种，消费者对于不同产品形式之间的评价是否会有所差异呢？
+
+下图展示了消费者对不同产品形态的综合评分，
+从中可以发现评分可因产品形态差异存在不同。
+
+```{r fig.cap = cap}
+ggplot(comment,aes(score,fill=factor(score))) + geom_bar() +
+  facet_wrap(~product) +
+  scale_x_continuous(breaks = 1:10) +
+  scale_fill_brewer(palette = "RdBu", direction = -1) +
+  theme(legend.position = "none") +
+  labs(x="评分",y="评分数量")
+cap <- capd("消费者对不同产品形态的综合评分（10分表示非常满意）")
+graph2pptx()
+```
+
+
+
 图 \@ref(fig:consumer-survey-product-type-stat) 是一幅统计学图表，
-它给出了肯定的回答。
+它进一步明确地给出了肯定的回答。
 
 由图可知，消费者对于“滴剂”、“乳酸菌饮料”的满意度显著高于平均水平（红色星号），
 而对固体饮料、软糖、酸奶、药品的满意度则低于平均水平（蓝色星号）。
@@ -73,7 +90,166 @@ graph2pptx()
 figcap <- capd("按照消费者性别分别做统计分析")
 
 p + facet_wrap(~gender, ncol=1)
+graph2pptx()
+```
+
+总之，消费者最满意的是滴剂，最不满意的是医生开出的药品。
+
+### 有效性评分
+
+```{r}
+validity <- subset_question_data(data, "Q4_Q4|S2b|S4_S4") %>%
+  pivot_longer(cols = -(1:2))
+colnames(validity) <- c("city_lvl","gender","product","score")
+validity <- validity %>%
+  mutate(product = str_remove_all(product, ".+_")) %>%
+  filter(!is.na(score), !is.na(city_lvl)) %>%
+  mutate(city_lvl = factor(city_lvl, 
+                           levels = c("一线城市","二线城市","三线城市")),
+         score = factor(score,
+                        levels = c("特别有效，体感强烈，立竿见影",
+                                   "有效，体感温和，感受满意",
+                                   "效果一般，聊胜于无",
+                                   "无效，感知不到身体变化")))
+```
+
+图 \@ref(fig:consumer-survey-validity-bar) 展示了消费者对不同产品的有效性评分。
+在这里面，全部的产品形态均是有效（含特别有效和有效）占比大于无效（含一般和无效）。
+其中，特别有效比例最大的益生菌药品。
+尽管消费者对医生开出的益生菌满意度不高，但是他的效果是最佳的。
+特别有效的比例超过了有效，远大于无效和一般的评价数目。
+
+
+```{r consumer-survey-validity-bar, fig.cap = cap}
+ggplot(validity, aes(score, fill = score)) + geom_bar() +
+  facet_wrap(~product, scales = "free_y") +
+  theme(axis.text.x = element_blank(),
+        legend.position = c(0.83,0.18)) +
+  scale_fill_brewer(palette = "RdBu") +
+  labs(x="",y="",fill="")
+cap <- capd("消费者对不同产品形态的效果评分")
+graph2pptx()
+```
+
+## 购买行为分析
+
+### 购买频次
+
+```{r}
+purchase <- subset_question_data(data, "Q5_Q5|S2b|S4_S4") %>%
+  pivot_longer(cols = -(1:2))
+colnames(purchase) <- c("city_lvl","gender","product","freq")
+purchase <- purchase %>%
+  mutate(product = str_remove_all(product, ".+_")) %>%
+  filter(!is.na(freq), !is.na(city_lvl)) %>%
+  mutate(city_lvl = factor(city_lvl, 
+                           levels = c("一线城市","二线城市","三线城市")),
+         freq = factor(freq,
+                        levels = c("一周2-3次",	"一周1次",
+                                   "一个月2-3次",	"一个月1次",
+                                   "两到三个月1次",	"三个月到半年1次",
+                                   "半年以上1次")))
 
 ```
 
 
+图 \@ref(fig:consumer-survey-purchase-freq-bar) 展示了消费者对各种产品的购买频次。
+
+```{r consumer-survey-purchase-freq-bar, fig.cap = cap}
+ggplot(purchase, aes(freq, fill = freq)) + geom_bar() +
+  facet_wrap(~product, scales = "free_y") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +
+  scale_fill_brewer(palette = "Reds", direction = -1) +
+  labs(x="",y="",fill="")
+cap <- capd("消费者对不同产品形态的购买频次")
+graph2pptx()
+```
+
+### 购买价格
+
+```{r}
+price <- subset_question_data(data, "Q6_Q6|S2b|S4_S4") %>%
+  pivot_longer(cols = -(1:2))
+colnames(price) <- c("city_lvl","gender","product","price")
+price <- price %>%
+  mutate(product = str_remove_all(product, ".+_")) %>%
+  filter(!is.na(price), !is.na(city_lvl)) %>%
+  mutate(city_lvl = factor(city_lvl, 
+                           levels = c("一线城市","二线城市","三线城市")),
+         price = factor(price,
+                        levels = c("50元以下",
+                                    "50-100元",
+                                    "100-150元",
+                                    "150-200元",
+                                    "200-250元",
+                                    "250-300元",
+                                    "300-350元",
+                                    "350-400元",
+                                    "400元以上")))
+
+```
+
+图 \@ref(fig:consumer-survey-price-freq-bar) 展示益生菌产品单次消费的金额。
+
+
+```{r consumer-survey-price-freq-bar, fig.cap = cap}
+ggplot(price, aes(price, fill = price)) + geom_bar() +
+  facet_wrap(~product, scales = "free_y") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +
+  scale_fill_brewer(palette = "Reds", direction = -1) +
+  labs(x="",y="",fill="")
+cap <- capd("益生菌产品单次消费的金额")
+graph2pptx()
+```
+城市线级对益生菌消费的价格似乎并没有太大影响。
+
+
+```{r consumer-survey-price-freq-bar-by-city-lvl, fig.cap = cap,fig.width=10,fig.asp=1,warning=FALSE}
+
+plots <- lapply(unique(price$product), function(x){
+  ggplot(price %>% filter(product == x), aes(price, fill = price)) + geom_bar() +
+  facet_wrap(~ city_lvl , scales = "free_y", ncol = 1) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +
+  scale_fill_brewer(palette = "Reds", direction = -1) +
+  labs(x="",y="",fill="",title = x)
+})
+
+plot_grid(plotlist = plots, ncol = 4)
+
+cap <- capd("益生菌产品单次消费的金额")
+graph2pptx()
+```
+
+
+
+### 从哪里购买？
+
+```{r}
+source <- subset_question_data(data, "Q8_Q8|S2b|S4_S4") %>%
+  pivot_longer(cols = -(1:2))
+colnames(source) <- c("city_lvl","gender","product","source")
+source <- source %>%
+  mutate(product = str_remove_all(product, "^.+\\..+?_|_.+?$"),
+         source = str_remove(source, "（.+）")) %>%
+  filter(!is.na(source), !is.na(city_lvl)) %>%
+  mutate(city_lvl = factor(city_lvl, 
+                           levels = c("一线城市","二线城市","三线城市")))
+
+```
+
+图 \@ref(fig:consumer-survey-source-freq-bar) 展示了消费者在哪里购买益生菌产品？
+药店、商超和医院仍然是比较受欢迎的地方，电商平台也已经成为主流。
+
+```{r consumer-survey-source-freq-bar, fig.cap = cap}
+ggplot(source, aes(source, fill = source)) + geom_bar() +
+  facet_wrap(~product, scales = "free_y") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +
+  scale_fill_brewer(palette = "Paired", direction = -1) +
+  labs(x="",y="",fill="")
+cap <- capd("消费者在哪里购买益生菌产品？")
+graph2pptx()
+```
