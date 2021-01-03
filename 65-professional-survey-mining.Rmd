@@ -53,7 +53,7 @@ q <- "Q4"
 name <- get_question_name(data = data, q)
 ```
 
-### `r name`
+## `r name`
 
 ```{r fig.cap=cap}
 d <- question_data(data, q) %>%
@@ -69,7 +69,7 @@ q <- "Q7"
 name <- get_question_name(data, q)
 ```
 
-### `r name`
+## `r name`
 
 ```{r fig.cap=cap}
 d <- question_data(data, q) %>%
@@ -85,7 +85,7 @@ q <- "Q8"
 name <- get_question_name(data, q)
 ```
 
-### `r name`
+## `r name`
 
 ```{r fig.cap=cap}
 d <- question_data(data, q) %>%
@@ -101,7 +101,7 @@ q <- "Q9"
 name <- get_question_name(data, q)
 ```
 
-### `r name`
+## `r name`
 
 ```{r fig.cap=cap}
 d <- question_data(data, q) %>%
@@ -118,7 +118,7 @@ q <- "Q11"
 name <- get_question_name(data, q)
 ```
 
-### `r name`
+## `r name`
 
 ```{r fig.cap=cap}
 d <- question_data(data, q) %>%
@@ -135,7 +135,7 @@ q <- "Q12"
 name <- get_question_name(data, q)
 ```
 
-### `r name`
+## `r name`
 
 ```{r fig.cap=cap}
 d <- question_data(data, q) %>%
@@ -151,7 +151,7 @@ q <- "Q13_Q13"
 name <- get_question_name(data, q)
 ```
 
-### `r name`
+## `r name`
 
 ```{r fig.cap=cap}
 d <- question_data(data, q) %>%
@@ -167,7 +167,7 @@ q <- "Q14"
 name <- get_question_name(data, q)
 ```
 
-### `r name`
+## `r name`
 
 ```{r fig.cap=cap}
 d <- question_data(data, q) %>%
@@ -183,7 +183,7 @@ q <- "Q16"
 name <- get_question_name(data, q)
 ```
 
-### `r name`
+## `r name`
 
 ```{r fig.cap=cap, fig.asp=1}
 d <- subset_question_data(data, "Q1_Q1|Q16") %>%
