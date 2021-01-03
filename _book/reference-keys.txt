@@ -119,6 +119,9 @@ fig:unnamed-chunk-52
 fig:unnamed-chunk-53
 fig:unnamed-chunk-54
 fig:unnamed-chunk-55
+fig:consumer-survey-product-type-stat
+fig:unnamed-chunk-57
+fig:unnamed-chunk-58
 raw-data
 文献数据的预处理
 物种信息的处理
@@ -227,8 +230,11 @@ consumer-survey
 调研对象-2
 地域分布
 社会化属性
-产品形态和评价
+产品形态和综合评价
 消费习惯
 益生菌消费概念
+consumer-survey-mining
+有效性和满意度
+最满意滴剂
 highly-cite-xlsx
 china-study-xlsx
