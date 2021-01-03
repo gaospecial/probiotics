@@ -33,7 +33,7 @@ colnames(data) <- new_colname
 ## 调研对象
 
 此次调研的对象来自于全国多个省市（图 \@ref(fig:pro-survey-map)），
-其中尤以北京、广东、江西为多(图 \@ref(fig:pro-survey-province)）。
+其中尤以北京、广东、江苏为多(图 \@ref(fig:pro-survey-province)）。
 
 **地图**
 
@@ -62,8 +62,8 @@ hbarplot(d) +
 graph2pptx()
 ```
 
-其中超过一半的调研对象是基础研究者，超两成的临床医生，11% 的企业管理者和
-7.8% 的企业研发人员（图 \@ref(fig:pro-survey-job-piechart)）。
+其中约一半的调研对象是基础研究者，超两成的临床医生，约一成的企业管理者和
+7.3% 的企业研发人员（图 \@ref(fig:pro-survey-job-piechart)）。
 
 ```{r pro-survey-job-piechart, fig.cap=capd("调研对象的职业分布")}
 idx <- which(str_detect(new_colname, "职业"))
