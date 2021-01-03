@@ -1,0 +1,79 @@
+# 消费者问卷数据挖掘 {#consumer-survey-mining}
+
+## 有效性和满意度
+
+```{r}
+data <- read_csv("data-raw/fengniao-survey/consumer/AnswernaireReadable.csv",
+                guess_max = 5000)
+
+comment <- subset_question_data(data, "Q3_Q3|S2b|S4_S4") %>%
+  pivot_longer(cols = -(1:2))
+colnames(comment) <- c("city_lvl","gender","product","score")
+comment <- comment %>%
+  mutate(product = str_remove_all(product, ".+非常满意_|_开放题")) %>%
+  filter(!is.na(score), !is.na(city_lvl)) %>%
+  mutate(city_lvl = factor(city_lvl, levels = c("一线城市","二线城市","三线城市")))
+```
+
+### 最满意滴剂
+
+益生菌的产品形式有很多种，消费者对于不同产品形式之间的评价是否会有所差异呢？
+图 \@ref(fig:consumer-survey-product-type-stat) 是一幅统计学图表，
+它给出了肯定的回答。
+
+由图可知，消费者对于“滴剂”、“乳酸菌饮料”的满意度显著高于平均水平（红色星号），
+而对固体饮料、软糖、酸奶、药品的满意度则低于平均水平（蓝色星号）。
+特别值得注意的是，消费者对于“滴剂”和“药品”的满意度呈现了特别明显的两极分化现象，
+本该是最科学严谨的医生处方，反而成为最不满意的益生菌来源，
+这不得不让人深思。
+
+```{r consumer-survey-product-type-stat, fig.cap=figcap}
+library(ggpubr)
+library(rstatix)
+figcap <- capd("消费者对不同类型的益生菌产品的满意度存在差异")
+p <- ggplot(comment, aes(product, score)) + geom_boxplot(outlier.shape = NA) +
+  stat_compare_means(method = "wilcox.test", ref.group = ".all.",
+                     hide.ns = TRUE,
+                     label = "p.signif",
+                     method.args = list(alternative = "greater"),
+                     color = "red") +
+  stat_compare_means(method = "wilcox.test", ref.group = ".all.",
+                     hide.ns = TRUE,
+                     label = "p.signif",
+                     method.args = list(alternative = "less"),
+                     color = "blue") +
+  geom_hline(yintercept = median(comment$score), 
+             lty="dashed", 
+             color="firebrick", 
+             size = 1, 
+             alpha = 1/2) +
+  # facet_wrap(~gender, ncol = 1) +
+  scale_y_continuous(expand = expansion(mult = .1)) +
+  labs(x = "产品形式", y="综合评分", subtitle = "(1-10,10分表示非常满意)")
+p
+graph2pptx()
+```
+
+
+图 \@ref(fig:consumer-survey-product-type-stat) 的结果
+虽然在不同线级城市和男女消费者存在细微差异，
+但是总体趋势仍然是比较明显的。
+
+
+```{r fig.asp=1.5, fig.cap=figcap}
+# 按照城市线级评分
+figcap <- capd("按照不同城市线级分别做统计分析")
+p + facet_wrap(~city_lvl,ncol = 1)
+graph2pptx()
+```
+
+
+```{r fig.asp=1, fig.cap=figcap}
+# 按照性别比较评分
+figcap <- capd("按照消费者性别分别做统计分析")
+
+p + facet_wrap(~gender, ncol=1)
+
+```
+
+

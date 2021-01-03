@@ -83,6 +83,13 @@ summarise_plot <- function(data,
 }
 
 
+# 根据问题，获取数据子集（多个列）
+subset_question_data <- function(data, question){
+  colname <- colnames(data)
+  idx <- which(str_detect(colname, question))
+  data[idx]
+}
+
 # 搜索问题，根据问题的类型自动选择绘制饼图或条形图
 # 适用于蜂鸟问卷的导出数据
 plot_this_question <- function(data, question, 
