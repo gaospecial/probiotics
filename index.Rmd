@@ -64,7 +64,8 @@ library(tidyr)
 library(shadowtext)
 library(sf)
 library(readr)
-
+library(showtext)
+showtext.auto()
 theme_set(theme_bw())
 source("./function.R")
 ```
