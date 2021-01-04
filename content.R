@@ -61,6 +61,7 @@ shrink_lvl <- function(x, sort = TRUE, keep = 9, other = "Other"){
   ret <- rep(other, times = length(x))
   idx <- x %in% lvl_new
   ret[idx] <- x[idx]
+  ret <- factor(ret, levels = c(lvl_new, other))
   return(ret)
 }
 
@@ -91,6 +92,7 @@ subset_question_data <- function(data, question){
 }
 
 # 搜索问题，根据问题的类型自动选择绘制饼图或条形图
+# (如果是单选题且选项数目＜3，则绘制饼图；否则为柱状图)
 # 适用于蜂鸟问卷的导出数据
 plot_this_question <- function(data, question, 
                                multi_choice = "auto", 
@@ -110,7 +112,7 @@ plot_this_question <- function(data, question,
   }
   
   if (plot == "auto"){
-    if (multi_choice) {
+    if (multi_choice | length(unique(x)) > 3) {
       plot <- "bar"
     } else {
       plot <- "pie"
@@ -118,7 +120,7 @@ plot_this_question <- function(data, question,
   }
   if (plot == "pie") p <- ggpie(x, ...)
   if (plot == "bar") p <- hbarplot(x, ...)
-  return(p)
+  return(p + labs(x="",y="",fill=""))
 }
 
 

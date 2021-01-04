@@ -6,6 +6,7 @@ hbarplot <- function(d, n=NULL, show = c("rank","name"), sort = TRUE, decreasing
   show <- match.arg(show)
   require("forcats")
   require("ggplot2")
+  if (is.factor(d)) d <- fct_count(d)
   if (is.vector(d)) d <- table(d)
   if (is.table(d) & sort)  d <- sort(d, decreasing = decreasing)
   if (is.table(d)) d <- as.data.frame(d)
