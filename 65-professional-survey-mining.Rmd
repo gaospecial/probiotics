@@ -15,18 +15,32 @@ question_data <- function(data, q){
   question <- subset_question_data(data, paste0("Q1_Q1|",q))
   colnames(question) <- c("job","answer")
   question %>% mutate(job = str_remove_all(job,"请注明：")) %>%
-  mutate(job = factor(job,
-                      levels = c("基础研究者",
-                                 "临床医生",
-                                 "企业管理者",
-                                 "企业研发人员",
-                                 "其他")))
+    mutate(job = factor(job,
+                        levels = c("基础研究者",
+                                   "临床医生",
+                                   "企业管理者",
+                                   "企业研发人员",
+                                   "其他"),
+                        labels = c("基础研究者",
+                                   "临床医生",
+                                   "企业人员",
+                                   "企业人员",
+                                   "其他"))) %>%
+    filter(job != "其他") %>%
+    group_by(job, answer) %>%
+    summarise(count = n()) %>%
+    group_by(job) %>%
+    mutate(percentage = count /sum(count)) %>%
+    ungroup()
 }
 
 bar_comparison <- function(data){
-  ggplot(data, aes(answer, fill = answer)) + geom_bar() +
+  ggplot(data, aes(answer, percentage, fill = answer)) + geom_col() +
     facet_wrap(~job, ncol=5) +
+    geom_text(aes(label=paste0(round(percentage*100),"%")), vjust = -.2) +
     scale_fill_brewer(palette = "Reds") +
+    scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                       expand = c(0,0,0.15,0)) +
     labs(x = "",y="",fill="") +
     theme(legend.position = "bottom",
           axis.text.x = element_blank())
@@ -104,8 +118,11 @@ name <- get_question_name(data, q)
 ## `r name`
 
 ```{r fig.cap=cap}
+lvl <- c("≤10亿","10-50亿","50-100亿","100-300亿","300-500亿","500-1000亿","≥1000亿",
+         "基于人体临床随机对照试验（RCT）实际起效的菌数而定")
 d <- question_data(data, q) %>%
-  mutate(answer = factor(answer))
+  mutate(answer = factor(answer,
+                         levels = lvl))
 bar_comparison(d)
 cap <- capd(name)
 graph2pptx()
@@ -121,8 +138,10 @@ name <- get_question_name(data, q)
 ## `r name`
 
 ```{r fig.cap=cap}
+lvl <- c("不应摄入","≤10亿","10-50亿","50-100亿","100-300亿","300-500亿","500-1000亿","≥1000亿")
 d <- question_data(data, q) %>%
-  mutate(answer = factor(answer))
+  mutate(answer = factor(answer,
+                         levels = lvl))
 bar_comparison(d)
 cap <- capd(name)
 graph2pptx()
@@ -139,7 +158,7 @@ name <- get_question_name(data, q)
 
 ```{r fig.cap=cap}
 d <- question_data(data, q) %>%
-  mutate(answer = factor(answer))
+  mutate(answer = factor(answer, levels = lvl))
 bar_comparison(d)
 cap <- capd(name)
 graph2pptx()
@@ -154,13 +173,37 @@ name <- get_question_name(data, q)
 ## `r name`
 
 ```{r fig.cap=cap}
+lvl_cfu <- c("≥10的5次方","≥10的6次方","≥10的7次方","≥10的8次方（1亿）",
+             "≥10的9次方（10亿）","≥10的10次方（100亿）","无所谓死活，只要产品还有效",
+             "不能低于出厂活菌数的一定百分比")
 d <- question_data(data, q) %>%
-  mutate(answer = factor(answer))
+  mutate(answer = str_remove(answer, "：.+")) %>%
+  mutate(answer = factor(answer, levels = lvl_cfu))
 bar_comparison(d)
 cap <- capd(name)
 graph2pptx()
 ```
+```{r}
+q <- "Q13_开放题"
+name <- get_question_name(data, q)
+```
 
+### 货架期益生菌活菌数不低于  %？
+
+```{r fig.cap=cap}
+d <- question_data(data, q) %>%
+  mutate(answer = factor(answer)) %>%
+  filter(!is.na(answer))
+ggplot(d, aes(answer, percentage)) + geom_col() +
+  facet_wrap(~job, ncol = 1) +
+  geom_text(aes(label = paste0(round(percentage*100), "%")), vjust = -.2) +
+  labs(x="",y="") +
+  scale_y_continuous(labels = scales::percent_format(1),
+                     expand = c(0,0,0.25,0)) +
+  scale_x_discrete(labels = function(x) paste0(x,"%"))
+cap <- capd("货架期益生菌活菌数不低于  %？")
+graph2pptx()
+```
 
 ```{r}
 q <- "Q14"
@@ -185,15 +228,36 @@ name <- get_question_name(data, q)
 
 ## `r name`
 
-```{r fig.cap=cap, fig.asp=1}
+```{r fig.cap=cap, fig.asp=0.8}
 d <- subset_question_data(data, "Q1_Q1|Q16") %>%
   pivot_longer(cols = -1) %>%
   filter(!is.na(value)) %>%
   select(-2)
-colnames(d) <- c("job","comment")
-ggplot(d, aes(comment, fill = comment)) + geom_bar() +
-  facet_wrap(~job, ncol = 1,scales = "free_y") +
-  theme(axis.text.x = element_blank())
+colnames(d) <- c("job","answer")
+d <- d %>% mutate(job = factor(job,
+                        levels = c("基础研究者",
+                                   "临床医生",
+                                   "企业管理者",
+                                   "企业研发人员",
+                                   "其他"),
+                        labels = c("基础研究者",
+                                   "临床医生",
+                                   "企业人员",
+                                   "企业人员",
+                                   "其他"))) %>%
+    filter(job != "其他", answer != "其他：") %>%
+    group_by(job, answer) %>%
+    summarise(count = n()) %>%
+    group_by(job) %>%
+    mutate(percentage = count /sum(count)) %>%
+    ungroup() %>%
+  mutate(answer = str_wrap(answer, width = 16))
+bar_comparison(d) + scale_fill_manual(
+  values = colorRampPalette(brewer.pal(8, "Dark2"))(length(unique(d[["answer"]])))) +
+  facet_wrap(~job, ncol = 1) +
+  theme(legend.position = "right") +
+  theme(legend.text = element_text(margin = margin(t=2,b=2)))
+
 cap <- capd(name)
 graph2pptx()
 ```
