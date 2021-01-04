@@ -1,0 +1,231 @@
+# 专业人士调研深入解析 {#professional-survey-mining2}
+
+
+这一部分，我们主要看一下专业人士的职业是否会影响其对一些问题的看法。
+
+```{r}
+data <- read_csv("data-raw/fengniao-survey/professional/AnswernaireReadable.csv")
+
+```
+
+## 是否认同“补充益生菌可改善肠道和全身健康”？
+
+```{r }
+question_data <- function(data, q){
+  question <- subset_question_data(data, paste0("Q1_Q1|",q))
+  colnames(question) <- c("job","answer")
+  question %>% mutate(job = str_remove_all(job,"请注明：")) %>%
+    mutate(job = factor(job,
+                        levels = c("基础研究者",
+                                   "临床医生",
+                                   "企业管理者",
+                                   "企业研发人员",
+                                   "其他"),
+                        labels = c("基础研究者",
+                                   "临床医生",
+                                   "企业人员",
+                                   "企业人员",
+                                   "其他"))) %>%
+    filter(job != "其他") %>%
+    group_by(job, answer) %>%
+    summarise(count = n()) %>%
+    group_by(job) %>%
+    mutate(percentage = count /sum(count)) %>%
+    ungroup()
+}
+
+bar_comparison <- function(data){
+  ggplot(data, aes(answer, percentage, fill = answer)) + geom_col() +
+    facet_wrap(~job, ncol=5) +
+    scale_fill_brewer(palette = "Reds") +
+    scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    labs(x = "",y="",fill="") +
+    theme(legend.position = "bottom",
+          axis.text.x = element_blank())
+}
+```
+
+
+```{r fig.cap=cap}
+q3 <- question_data(data = data, "Q3") %>%
+  mutate(answer = factor(answer,
+                         levels = c("完全不认同",
+                                    "不认同",
+                                    "有限认同",
+                                    "完全认同")))
+bar_comparison(q3)
+name <- get_question_name(data, q)
+cap <- capd(name)
+graph2pptx()
+```
+
+
+```{r}
+q <- "Q4"
+name <- get_question_name(data = data, q)
+```
+
+## `r name`
+
+```{r fig.cap=cap}
+d <- question_data(data, q) %>%
+  mutate(answer = factor(answer, 
+                         levels = c("不必要","可适度摄入","必要","非常必要")))
+bar_comparison(d)
+cap <- capd(name)
+graph2pptx()
+```
+
+```{r}
+q <- "Q7"
+name <- get_question_name(data, q)
+```
+
+## `r name`
+
+```{r fig.cap=cap}
+d <- question_data(data, q) %>%
+  mutate(answer = factor(answer, levels = c("单一菌株","2-5个","6-10个","≥10个")))
+bar_comparison(d)
+cap <- capd(name)
+graph2pptx()
+```
+
+
+```{r}
+q <- "Q8"
+name <- get_question_name(data, q)
+```
+
+## `r name`
+
+```{r fig.cap=cap}
+d <- question_data(data, q) %>%
+  mutate(answer = factor(answer))
+bar_comparison(d)
+cap <- capd(name)
+graph2pptx()
+```
+
+
+```{r}
+q <- "Q9"
+name <- get_question_name(data, q)
+```
+
+## `r name`
+
+```{r fig.cap=cap}
+d <- question_data(data, q) %>%
+  mutate(answer = factor(answer))
+bar_comparison(d)
+cap <- capd(name)
+graph2pptx()
+```
+
+
+
+```{r}
+q <- "Q11"
+name <- get_question_name(data, q)
+```
+
+## `r name`
+
+```{r fig.cap=cap}
+d <- question_data(data, q) %>%
+  mutate(answer = factor(answer))
+bar_comparison(d)
+cap <- capd(name)
+graph2pptx()
+```
+
+
+
+```{r}
+q <- "Q12"
+name <- get_question_name(data, q)
+```
+
+## `r name`
+
+```{r fig.cap=cap}
+d <- question_data(data, q) %>%
+  mutate(answer = factor(answer))
+bar_comparison(d)
+cap <- capd(name)
+graph2pptx()
+```
+
+
+```{r}
+q <- "Q13_Q13"
+name <- get_question_name(data, q)
+```
+
+## `r name`
+
+```{r fig.cap=cap}
+d <- question_data(data, q) %>%
+  mutate(answer = factor(answer))
+bar_comparison(d)
+cap <- capd(name)
+graph2pptx()
+```
+
+
+```{r}
+q <- "Q14"
+name <- get_question_name(data, q)
+```
+
+## `r name`
+
+```{r fig.cap=cap}
+d <- question_data(data, q) %>%
+  mutate(answer = factor(answer))
+bar_comparison(d)
+cap <- capd(name)
+graph2pptx()
+```
+
+
+```{r}
+q <- "Q16"
+name <- get_question_name(data, q)
+```
+
+## `r name`
+
+```{r fig.cap=cap, fig.asp=0.8}
+d <- subset_question_data(data, "Q1_Q1|Q16") %>%
+  pivot_longer(cols = -1) %>%
+  filter(!is.na(value)) %>%
+  select(-2)
+colnames(d) <- c("job","answer")
+d <- d %>% mutate(job = factor(job,
+                        levels = c("基础研究者",
+                                   "临床医生",
+                                   "企业管理者",
+                                   "企业研发人员",
+                                   "其他"),
+                        labels = c("基础研究者",
+                                   "临床医生",
+                                   "企业人员",
+                                   "企业人员",
+                                   "其他"))) %>%
+    filter(job != "其他") %>%
+    group_by(job, answer) %>%
+    summarise(count = n()) %>%
+    group_by(job) %>%
+    mutate(percentage = count /sum(count)) %>%
+    ungroup()
+bar_comparison(d) + scale_fill_manual(
+  values = colorRampPalette(brewer.pal(8, "Dark2"))(length(unique(d[["answer"]])))) +
+  facet_wrap(~job, ncol = 1) +
+  theme(legend.position = "right")
+
+cap <- capd(name)
+graph2pptx()
+```
+
