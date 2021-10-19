@@ -36,6 +36,7 @@ hbarplot <- function(d, n=NULL, show = c("rank","name"), sort = TRUE, decreasing
 
 # 对向量 x 或 table x 绘制饼状图
 ggpie <- function(x, sort = TRUE, decreasing = FALSE){
+  if (is.factor(x)) x <- as.character(x)
   if (is.vector(x)) x <- table(x)
   if (!is.table(x)) stop("Give me a table, please.")
   if (sort) x <- sort(x, decreasing = decreasing)

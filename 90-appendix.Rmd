@@ -7,7 +7,8 @@
 
 ```{r}
 openxlsx::write.xlsx(x = readRDS("data/highly_cited.RDS"),
-                     file = "data/highly_cited.xlsx")
+                     file = "data/highly_cited.xlsx",
+                     overwrite = TRUE)
 ```
 
 点击下载 [Excel 文档](./data/highly_cited.xlsx)。
@@ -65,7 +66,8 @@ DB |	数据库
 
 ```{r}
 openxlsx::write.xlsx(x = readRDS("data/china_study.RDS"),
-                     file = "data/china_study.xlsx")
+                     file = "data/china_study.xlsx",
+                     overwrite = TRUE)
 ```
 
 点击下载 [Excel 文档](./data/china_study.xlsx)。
